@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KidCode - Code Playground</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
+    <style>
+        :root {
+            --primary-color: #FE5D37;
+            --secondary-color: #FFD166;
+            --accent-color: #06D6A0;
+            --dark-color: #073B4C;
+            --light-color: #f8f9fa;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            color: var(--dark-color);
+            font-family: 'Roboto', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar styles */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: var(--primary-color);
+            background-image: linear-gradient(135deg, var(--primary-color) 0%, #ff8e63 100%);
+            color: white;
+            position: fixed;
+            padding: 20px;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .sidebar .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .sidebar .logo h2 {
+            font-weight: bold;
+        }
+        
+        .sidebar a {
+            color: white;
+            display: block;
+            padding: 12px 15px;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar a:hover, .sidebar a.active {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+        
+        /* Main content */
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .playground-container {
+            border-radius: 15px;
+            background-color: white;
+            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        /* Code editor styles */
+        .editor-section {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 220px);
+            min-height: 500px;
+        }
+        
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: #2c3e50;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            color: white;
+        }
+        
+        .language-tabs {
+            display: flex;
+        }
+        
+        .language-tab {
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-right: 5px;
+            transition: all 0.3s;
+        }
+        
+        .language-tab.active {
+            background-color: #3498db;
+        }
+        
+        .language-tab:hover:not(.active) {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .code-action-buttons button {
+            margin-left: 10px;
+            border: none;
+            border-radius: 5px;
+            padding: 6px 12px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .code-editors {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .code-editor {
+            flex: 1;
+            display: none;
+            height: 100%;
+            border-bottom-left-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .code-editor.active {
+            display: block;
+        }
+        
+        .CodeMirror {
+            height: 100% !important;
+            font-size: 16px;
+        }
+        
+        .preview-section {
+            margin-top: 20px;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: #2c3e50;
+            color: white;
+        }
+        
+        .preview-content {
+            height: 300px;
+            border: none;
+            width: 100%;
+        }
+        
+        /* Templates section */
+        .template-card {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .template-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .template-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+        }
+        
+        .template-body {
+            padding: 15px;
+            background-color: white;
+        }
+        
+        .template-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        /* Buttons */
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            background-color: #e04e2e;
+            transform: translateY(-2px);
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-success {
+            background-color: var(--accent-color);
+            border: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .btn-success:hover {
+            background-color: #05b085;
+            transform: translateY(-2px);
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Mobile Navigation */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            z-index: 1000;
+            box-shadow: 0px -5px 20px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+        }
+        
+        .mobile-nav a {
+            color: var(--dark-color);
+            text-align: center;
+            padding: 10px;
+            text-decoration: none;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .mobile-nav a i {
+            font-size: 20px;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+        }
+        
+        .mobile-nav a.active {
+            color: var(--primary-color);
+        }
+        
+        /* Toggle button for sidebar */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            z-index: 1001;
+            cursor: pointer;
+        }
+        
+        /* Challenge Section */
+        .challenge-card {
+            background-color: #f8f9fa;
+            border-left: 5px solid var(--primary-color);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+        
+        .challenge-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .challenge-difficulty {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .easy {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .medium {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .hard {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content.active {
+                margin-left: 250px;
+            }
+            
+            .editor-section {
+                height: calc(100vh - 280px);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                z-index: 1002;
+            }
+            
+            .main-content.active {
+                margin-left: 0;
+                padding-top: 250px;
+            }
+            
+            .mobile-nav {
+                display: flex;
+                justify-content: space-around;
+            }
+            
+            body {
+                padding-bottom: 70px;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .editor-section {
+                height: 400px;
+                min-height: 400px;
+            }
+            
+            .preview-content {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Menu toggle button for mobile -->
+    <button class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <h2><i class="fas fa-code"></i> KidCode</h2>
+        </div>
+        <a href="index.html"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="playground.html" class="active"><i class="fas fa-laptop-code"></i> Coding Playground</a>
+        <a href="challenges.html"><i class="fas fa-puzzle-piece"></i> Challenges</a>
+        <a href="#"><i class="fas fa-trophy"></i> Achievements</a>
+        <a href="#"><i class="fas fa-book"></i> Learning Path</a>
+        <a href="#"><i class="fas fa-calendar-alt"></i> Schedule</a>
+        <a href="#"><i class="fas fa-question-circle"></i> Help</a>
+        <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal"><i class="fas fa-sign-in-alt"></i> Login/Profile</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Code Playground Section -->
+                <div class="playground-container">
+                    <h4 class="mb-3"><i class="fas fa-laptop-code"></i> Code Playground</h4>
+                    
+                    <div class="editor-section">
+                        <div class="code-header">
+                            <div class="language-tabs">
+                                <div class="language-tab active" data-lang="html">HTML</div>
+                                <div class="language-tab" data-lang="css">CSS</div>
+                                <div class="language-tab" data-lang="js">JavaScript</div>
+                            </div>
+                            <div class="code-action-buttons">
+                                <button class="btn btn-success" id="runCodeBtn">
+                                    <i class="fas fa-play"></i> Run
+                                </button>
+                                <button class="btn btn-light" id="saveCodeBtn">
+                                    <i class="fas fa-save"></i> Save
+                                </button>
+                                <button class="btn btn-light" id="resetCodeBtn">
+                                    <i class="fas fa-undo"></i> Reset
+                                </button>
+                            </div>
+                        </div>
+                        <div class="code-editors">
+                            <div class="code-editor active" id="htmlEditor"></div>
+                            <div class="code-editor" id="cssEditor"></div>
+                            <div class="code-editor" id="jsEditor"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="preview-section">
+                        <div class="preview-header">
+                            <h5 class="mb-0">Preview</h5>
+                            <button class="btn btn-sm btn-light" id="fullscreenBtn">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                        </div>
+                        <iframe class="preview-content" id="previewFrame"></iframe>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <!-- Templates Section -->
+                <div class="playground-container">
+                    <h4 class="mb-3"><i class="fas fa-shapes"></i> Starter Templates</h4>
+                    
+                    <div class="template-card" id="blankTemplate">
+                        <div class="template-header">
+                            <i class="fas fa-file"></i> Blank Canvas
+                        </div>
+                        <div class="template-body">
+                            <div class="template-icon">
+                                <i class="fas fa-file-code"></i>
+                            </div>
+                            <p>Start with a clean slate and build from scratch.</p>
+                            <button class="btn btn-sm btn-primary">Use Template</button>
+                        </div>
+                    </div>
+                    
+                    <div class="template-card" id="gameTemplate">
+                        <div class="template-header">
+                            <i class="fas fa-gamepad"></i> Simple Game
+                        </div>
+                        <div class="template-body">
+                            <div class="template-icon">
+                                <i class="fas fa-gamepad"></i>
+                            </div>
+                            <p>Basic structure for a simple game.</p>
+                            <button class="btn btn-sm btn-primary">Use Template</button>
+                        </div>
+                    </div>
+                    
+                    <div class="template-card" id="animationTemplate">
+                        <div class="template-header">
+                            <i class="fas fa-film"></i> Animation
+                        </div>
+                        <div class="template-body">
+                            <div class="template-icon">
+                                <i class="fas fa-film"></i>
+                            </div>
+                            <p>Create amazing animations with this template.</p>
+                            <button class="btn btn-sm btn-primary">Use Template</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Challenge Section -->
+                <div class="playground-container">
+                    <h4 class="mb-3"><i class="fas fa-trophy"></i> Daily Challenges</h4>
+                    
+                    <div class="challenge-card">
+                        <h5>Create a Button Counter</h5>
+                        <div class="challenge-info">
+                            <span class="challenge-difficulty easy">Easy</span>
+                            <button class="btn btn-sm btn-primary">Try Challenge</button>
+                        </div>
+                    </div>
+                    
+                    <div class="challenge-card">
+                        <h5>Animated Navigation Menu</h5>
+                        <div class="challenge-info">
+                            <span class="challenge-difficulty medium">Medium</span>
+                            <button class="btn btn-sm btn-primary">Try Challenge</button>
+                        </div>
+                    </div>
+                    
+                    <div class="challenge-card">
+                        <h5>Memory Card Game</h5>
+                        <div class="challenge-info">
+                            <span class="challenge-difficulty hard">Hard</span>
+                            <button class="btn btn-sm btn-primary">Try Challenge</button>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <button class="btn btn-outline-primary">
+                            <i class="fas fa-trophy"></i> See All Challenges
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav">
+        <a href="index.html">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="#" class="active">
+            <i class="fas fa-laptop-code"></i>
+            <span>Code</span>
+        </a>
+        <a href="#">
+            <i class="fas fa-trophy"></i>
+            <span>Awards</span>
+        </a>
+        <a href="#">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Schedule</span>
+        </a>
+        <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Login to KidCode</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-user-circle" style="font-size: 60px; color: var(--primary-color);"></i>
+                        <h4 class="mt-2">Welcome back, Coder!</h4>
+                    </div>
+                    
+                    <form>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email or Username</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                            </div>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="rememberMe">
+                            <label class="form-check-label" for="rememberMe">Remember me</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                    </form>
+                    
+                    <div class="text-center mt-3">
+                        <a href="#" class="text-decoration-none">Forgot password?</a>
+                        <p class="mt-3 mb-0">New to KidCode? <a href="#" class="text-decoration-none">Sign up now!</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/htmlmixed/htmlmixed.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
+    <script>
+        // Default starter code
+const defaultHTML = `<!DOCTYPE html>
+<html>
+<head>
+    <title>My Awesome Project</title>
+</head>
+<body>
+    <h1>Welcome to KidCode!</h1>
+    <p>Start coding your amazing project here.</p>
+    <button id="myButton">Click Me!</button>
+</body>
+</html>`;
+
+const defaultCSS = `body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f0f2f5;
+    padding: 20px;
+}
+
+h1 {
+    color: #FE5D37;
+}
+
+button {
+    background-color: #FE5D37;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+button:hover {
+    background-color: #e04e2e;
+    transform: scale(1.05);
+}`;
+
+const defaultJS = `// Add your JavaScript code here
+document.getElementById("myButton").addEventListener("click", function() {
+    alert("You clicked the button! Great job!");
+});`;
+
+// Template starter code
+const templates = {
+    blank: {
+        html: `<!DOCTYPE html>
+<html>
+<head>
+    <title>My Project</title>
+</head>
+<body>
+    <!-- Start coding here -->
+    
+</body>
+</html>`,
+        css: `/* Add your CSS styles here */
+body {
+    font-family: Arial, sans-serif;
+}`,
+        js: `// Add your JavaScript code here
+`
+    },
+    game: {
+        html: `<!DOCTYPE html>
+<html>
+<head>
+    <title>My Game</title>
+</head>
+<body>
+    <h1>My Awesome Game</h1>
+    <div id="game-container">
+        <div id="player"></div>
+        <div id="target"></div>
+    </div>
+    <div id="score">Score: <span id="score-value">0</span></div>
+</body>
+</html>`,
+        css: `body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f0f2f5;
+}
+
+#game-container {
+    width: 400px;
+    height: 300px;
+    margin: 0 auto;
+    border: 2px solid #333;
+    position: relative;
+    background-color: #fff;
+    overflow: hidden;
+}
+
+#player {
+    width: 30px;
+    height: 30px;
+    background-color: #FE5D37;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#target {
+    width: 20px;
+    height: 20px;
+    background-color: #06D6A0;
+    position: absolute;
+    top: 20px;
+    left: 50px;
+    border-radius: 50%;
+}
+
+#score {
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: bold;
+}`,
+        js: `// Game variables
+let score = 0;
+let playerSpeed = 5;
+let playerX = 185; // Center position
+const player = document.getElementById('player');
+const target = document.getElementById('target');
+const scoreValue = document.getElementById('score-value');
+
+// Set up key controls
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'ArrowLeft') {
+        movePlayer(-playerSpeed);
+    } else if (event.key === 'ArrowRight') {
+        movePlayer(playerSpeed);
+    }
+});
+
+// Move the player
+function movePlayer(speed) {
+    playerX += speed;
+    // Keep player within boundaries
+    if (playerX < 0) playerX = 0;
+    if (playerX > 370) playerX = 370;
+    player.style.left = playerX + 'px';
+    checkCollision();
+}
+
+// Check if player caught the target
+function checkCollision() {
+    const playerRect = player.getBoundingClientRect();
+    const targetRect = target.getBoundingClientRect();
+    
+    if (playerRect.left < targetRect.right &&
+        playerRect.right > targetRect.left &&
+        playerRect.top < targetRect.bottom &&
+        playerRect.bottom > targetRect.top) {
+        // Collision detected!
+        score += 10;
+        scoreValue.textContent = score;
+        resetTarget();
+    }
+}
+
+// Reset target to a new position
+function resetTarget() {
+    const randomX = Math.floor(Math.random() * 380);
+    const randomY = Math.floor(Math.random() * 250);
+    target.style.left = randomX + 'px';
+    target.style.top = randomY + 'px';
+}
+
+// Start the game
+resetTarget();`
+    },
+    animation: {
+        html: `<!DOCTYPE html>
+<html>
+<head>
+    <title>Animation Demo</title>
+</head>
+<body>
+    <h1>Fun with Animations!</h1>
+    <div class="container">
+        <div class="box" id="box1"></div>
+        <div class="box" id="box2"></div>
+        <div class="box" id="box3"></div>
+    </div>
+    <button id="animateBtn">Animate!</button>
+</body>
+</html>`,
+        css: `body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f0f2f5;
+    padding: 20px;
+}
+
+.container {
+    margin: 30px auto;
+    height: 200px;
+    position: relative;
+}
+
+.box {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    left: 0;
+    border-radius: 5px;
+    transition: all 0.5s ease;
+}
+
+#box1 {
+    background-color: #FE5D37;
+    top: 0;
+}
+
+#box2 {
+    background-color: #FFD166;
+    top: 70px;
+}
+
+#box3 {
+    background-color: #06D6A0;
+    top: 140px;
+}
+
+button {
+    background-color: #FE5D37;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}`,
+        js: `// Animation code
+const box1 = document.getElementById('box1');
+const box2 = document.getElementById('box2');
+const box3 = document.getElementById('box3');
+const animateBtn = document.getElementById('animateBtn');
+
+let animated = false;
+
+animateBtn.addEventListener('click', function() {
+    if (!animated) {
+        // First animation
+        box1.style.left = '80%';
+        box1.style.transform = 'rotate(360deg)';
+        
+        // Second animation (with delay)
+        setTimeout(() => {
+            box2.style.left = '80%';
+            box2.style.transform = 'rotate(360deg)';
+        }, 200);
+        
+        // Third animation (with delay)
+        setTimeout(() => {
+            box3.style.left = '80%';
+            box3.style.transform = 'rotate(360deg)';
+        }, 400);
+        
+        animateBtn.textContent = 'Reset';
+    } else {
+        // Reset animations
+        box1.style.left = '0';
+        box1.style.transform = 'rotate(0)';
+        box2.style.left = '0';
+        box2.style.transform = 'rotate(0)';
+        box3.style.left = '0';
+        box3.style.transform = 'rotate(0)';
+        
+        animateBtn.textContent = 'Animate!';
+    }
+    
+    animated = !animated;
+});`
+    }
+};
+
+// Wait for DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize CodeMirror editors
+    const htmlEditor = CodeMirror(document.getElementById('htmlEditor'), {
+        mode: 'htmlmixed',
+        theme: 'monokai',
+        lineNumbers: true,
+        autoCloseTags: true,
+        value: defaultHTML
+    });
+
+    const cssEditor = CodeMirror(document.getElementById('cssEditor'), {
+        mode: 'css',
+        theme: 'monokai',
+        lineNumbers: true,
+        value: defaultCSS
+    });
+
+    const jsEditor = CodeMirror(document.getElementById('jsEditor'), {
+        mode: 'javascript',
+        theme: 'monokai',
+        lineNumbers: true,
+        value: defaultJS
+    });
+
+    // Tab switching functionality
+    document.querySelectorAll('.language-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            // Remove active class from all tabs and editors
+            document.querySelectorAll('.language-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.code-editor').forEach(e => e.classList.remove('active'));
+            
+            // Add active class to clicked tab and corresponding editor
+            tab.classList.add('active');
+            const lang = tab.getAttribute('data-lang');
+            document.getElementById(`${lang}Editor`).classList.add('active');
+        });
+    });
+
+    // Function to update the preview
+    function updatePreview() {
+        const html = htmlEditor.getValue();
+        const css = cssEditor.getValue();
+        const js = jsEditor.getValue();
+        
+        const previewFrame = document.getElementById('previewFrame');
+        const preview = previewFrame.contentDocument || previewFrame.contentWindow.document;
+        
+        preview.open();
+        preview.write(`
+            ${html}
+            <style>${css}</style>
+            <script>${js}<\/script>
+        `);
+        preview.close();
+    }
+
+    // Template functionality
+    document.getElementById('blankTemplate').addEventListener('click', () => {
+        htmlEditor.setValue(templates.blank.html);
+        cssEditor.setValue(templates.blank.css);
+        jsEditor.setValue(templates.blank.js);
+        updatePreview();
+    });
+
+    document.getElementById('gameTemplate').addEventListener('click', () => {
+        htmlEditor.setValue(templates.game.html);
+        cssEditor.setValue(templates.game.css);
+        jsEditor.setValue(templates.game.js);
+        updatePreview();
+    });
+
+    document.getElementById('animationTemplate').addEventListener('click', () => {
+        htmlEditor.setValue(templates.animation.html);
+        cssEditor.setValue(templates.animation.css);
+        jsEditor.setValue(templates.animation.js);
+        updatePreview();
+    });
+
+    // Run code functionality
+    document.getElementById('runCodeBtn').addEventListener('click', updatePreview);
+
+    // Save code functionality
+    document.getElementById('saveCodeBtn').addEventListener('click', () => {
+        const codeData = {
+            html: htmlEditor.getValue(),
+            css: cssEditor.getValue(),
+            js: jsEditor.getValue()
+        };
+        
+        // Save to localStorage
+        localStorage.setItem('kidCodeSavedProject', JSON.stringify(codeData));
+        
+        // Show saved notification
+        showNotification('Project saved successfully!');
+    });
+
+    // Reset code functionality
+    document.getElementById('resetCodeBtn').addEventListener('click', () => {
+        if (confirm('Are you sure you want to reset your code? All changes will be lost.')) {
+            htmlEditor.setValue(defaultHTML);
+            cssEditor.setValue(defaultCSS);
+            jsEditor.setValue(defaultJS);
+            updatePreview();
+        }
+    });
+
+    // Load saved code on startup
+    const savedProject = localStorage.getItem('kidCodeSavedProject');
+    if (savedProject) {
+        try {
+            const codeData = JSON.parse(savedProject);
+            htmlEditor.setValue(codeData.html || defaultHTML);
+            cssEditor.setValue(codeData.css || defaultCSS);
+            jsEditor.setValue(codeData.js || defaultJS);
+        } catch (e) {
+            console.error('Error loading saved project:', e);
+        }
+    }
+    
+    // Initial preview
+    updatePreview();
+
+    // Fullscreen preview functionality
+    document.getElementById('fullscreenBtn').addEventListener('click', () => {
+        const previewFrame = document.getElementById('previewFrame');
+        
+        if (previewFrame.requestFullscreen) {
+            previewFrame.requestFullscreen();
+        } else if (previewFrame.webkitRequestFullscreen) { /* Safari */
+            previewFrame.webkitRequestFullscreen();
+        } else if (previewFrame.msRequestFullscreen) { /* IE11 */
+            previewFrame.msRequestFullscreen();
+        }
+    });
+
+    // Challenge buttons functionality
+    document.querySelectorAll('.challenge-card .btn-primary').forEach(button => {
+        button.addEventListener('click', function() {
+            const challengeTitle = this.closest('.challenge-card').querySelector('h5').textContent;
+            
+            // Here you would load the appropriate challenge code
+            // For demonstration, we'll just show an alert
+            alert(`Loading challenge: ${challengeTitle}`);
+            
+            // In a real implementation, you would set the editors with challenge code
+            if (challengeTitle === 'Create a Button Counter') {
+                htmlEditor.setValue(`<!DOCTYPE html>
+<html>
+<head>
+    <title>Button Counter Challenge</title>
+</head>
+<body>
+    <h1>Button Counter Challenge</h1>
+    <p>Click the button to increase the counter:</p>
+    <button id="counterBtn">Click me!</button>
+    <div id="counter">0</div>
+</body>
+</html>`);
+                
+                cssEditor.setValue(`body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+}
+
+#counterBtn {
+    background-color: #FE5D37;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#counter {
+    font-size: 24px;
+    margin-top: 20px;
+    font-weight: bold;
+}`);
+                
+                jsEditor.setValue(`// Challenge: Complete the code to make the counter work
+// Hint: You need to add an event listener to the button
+
+// Your code here
+
+`);
+                
+                updatePreview();
+            }
+        });
+    });
+
+    // Mobile navigation and sidebar toggle
+    document.getElementById('menuToggle').addEventListener('click', () => {
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+        
+        sidebar.classList.toggle('active');
+        mainContent.classList.toggle('active');
+    });
+
+    // Helper function to show notifications
+    function showNotification(message) {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.style.position = 'fixed';
+        notification.style.bottom = '20px';
+        notification.style.right = '20px';
+        notification.style.backgroundColor = 'rgba(6, 214, 160, 0.9)';
+        notification.style.color = 'white';
+        notification.style.padding = '10px 20px';
+        notification.style.borderRadius = '5px';
+        notification.style.zIndex = '1050';
+        notification.textContent = message;
+        
+        // Add to body
+        document.body.appendChild(notification);
+        
+        // Remove after 3 seconds
+        setTimeout(() => {
+            notification.style.opacity = '0';
+            notification.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 500);
+        }, 3000);
+    }
+
+    // Modal related code
+    const loginForm = document.querySelector('#loginModal form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // Here you would handle the login logic
+            // For demonstration, we'll just show a notification
+            showNotification(`Welcome back, ${email.split('@')[0]}!`);
+            
+            // Close the modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+            modal.hide();
+        });
+    }
+
+    // Handle challenge buttons in mobile view
+    document.querySelectorAll('.mobile-nav a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            // Remove active class from all links
+            document.querySelectorAll('.mobile-nav a').forEach(l => l.classList.remove('active'));
+            
+            // Add active class to clicked link
+            this.classList.add('active');
+        });
+    });
+});
+    </script>

@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KidCode - Learning Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #FE5D37;
+            --secondary-color: #FFD166;
+            --accent-color: #06D6A0;
+            --dark-color: #073B4C;
+            --light-color: #f8f9fa;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            color: var(--dark-color);
+            font-family: 'Roboto', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar styles */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: var(--primary-color);
+            background-image: linear-gradient(135deg, var(--primary-color) 0%, #ff8e63 100%);
+            color: white;
+            position: fixed;
+            padding: 20px;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .sidebar .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .sidebar .logo h2 {
+            font-weight: bold;
+        }
+        
+        .sidebar a {
+            color: white;
+            display: block;
+            padding: 12px 15px;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar a:hover, .sidebar a.active {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+        
+        /* Main content */
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .dashboard-container {
+            border-radius: 15px;
+            background-color: white;
+            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .welcome-banner {
+            background-image: linear-gradient(135deg, #73a5ff 0%, #5477f5 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .welcome-banner::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150px;
+            height: 100%;
+            background-image: url('/api/placeholder/150/150');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: right center;
+            opacity: 0.3;
+        }
+        
+        /* Progress cards */
+        .progress-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress-card .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+            border: none;
+            padding: 15px;
+        }
+        
+        .progress-card .card-body {
+            padding: 20px;
+        }
+        
+        .progress-bar {
+            background-color: var(--primary-color);
+            height: 15px;
+            border-radius: 10px;
+        }
+        
+        .progress {
+            height: 15px;
+            border-radius: 10px;
+            background-color: #e9ecef;
+        }
+        
+        /* Badges section */
+        .badge-item {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .badge-icon {
+            width: 80px;
+            height: 80px;
+            background-color: #f8f9fa;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
+            color: var(--primary-color);
+            font-size: 30px;
+            transition: all 0.3s;
+        }
+        
+        .badge-item:hover .badge-icon {
+            transform: scale(1.1);
+            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .badge-locked .badge-icon {
+            color: #ccc;
+            background-color: #f0f0f0;
+        }
+        
+        /* Upcoming classes */
+        .class-card {
+            border-left: 5px solid var(--primary-color);
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+        }
+        
+        .class-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Buttons */
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            background-color: #e04e2e;
+            transform: translateY(-2px);
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+            border-radius: 8px;
+            padding: 10px 20px;
+            transition: all 0.3s;
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Mobile Navigation */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            z-index: 1000;
+            box-shadow: 0px -5px 20px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+        }
+        
+        .mobile-nav a {
+            color: var(--dark-color);
+            text-align: center;
+            padding: 10px;
+            text-decoration: none;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .mobile-nav a i {
+            font-size: 20px;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+        }
+        
+        .mobile-nav a.active {
+            color: var(--primary-color);
+        }
+        
+        /* Toggle button for sidebar */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            z-index: 1001;
+            cursor: pointer;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content.active {
+                margin-left: 250px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                z-index: 1002;
+            }
+            
+            .main-content.active {
+                margin-left: 0;
+                padding-top: 250px;
+            }
+            
+            .mobile-nav {
+                display: flex;
+                justify-content: space-around;
+            }
+            
+            body {
+                padding-bottom: 70px;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Menu toggle button for mobile -->
+    <button class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <h2><i class="fas fa-code"></i> KidCode</h2>
+        </div>
+        <a href="#" class="active"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="playground.html"><i class="fas fa-laptop-code"></i> Coding Playground</a>
+        <a href="#"><i class="fas fa-puzzle-piece"></i> Challenges</a>
+        <a href="#"><i class="fas fa-trophy"></i> Achievements</a>
+        <a href="#"><i class="fas fa-book"></i> Learning Path</a>
+        <a href="#"><i class="fas fa-calendar-alt"></i> Schedule</a>
+        <a href="#"><i class="fas fa-question-circle"></i> Help</a>
+        <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal"><i class="fas fa-sign-in-alt"></i> Login/Profile</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <!-- Welcome Banner -->
+        <div class="welcome-banner">
+            <h2>Hello, Coding Explorer!</h2>
+            <p>Ready to continue your coding adventure? You're making great progress!</p>
+            <button class="btn btn-light mt-2">
+                <i class="fas fa-play-circle"></i> Continue Learning
+            </button>
+        </div>
+
+        <!-- Progress Section -->
+        <div class="dashboard-container">
+            <h4 class="mb-4"><i class="fas fa-chart-line"></i> Learning Progress</h4>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="progress-card card">
+                        <div class="card-header">
+                            <i class="fas fa-book"></i> Completed Lessons
+                        </div>
+                        <div class="card-body">
+                            <h5 class="text-center">8/10 Lessons</h5>
+                            <div class="progress mt-3">
+                                <div class="progress-bar" role="progressbar" style="width: 80%;" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <div class="text-end mt-3">
+                                <small>80% completed</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="progress-card card">
+                        <div class="card-header">
+                            <i class="fas fa-question-circle"></i> Quizzes Passed
+                        </div>
+                        <div class="card-body">
+                            <h5 class="text-center">5/7 Quizzes</h5>
+                            <div class="progress mt-3">
+                                <div class="progress-bar" role="progressbar" style="width: 71%;" aria-valuenow="71" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <div class="text-end mt-3">
+                                <small>71% completed</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="progress-card card">
+                        <div class="card-header">
+                            <i class="fas fa-code"></i> Coding Practice
+                        </div>
+                        <div class="card-body">
+                            <h5 class="text-center">12/20 Exercises</h5>
+                            <div class="progress mt-3">
+                                <div class="progress-bar" role="progressbar" style="width: 60%;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <div class="text-end mt-3">
+                                <small>60% completed</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="progress-card card">
+                        <div class="card-header">
+                            <i class="fas fa-project-diagram"></i> Projects
+                        </div>
+                        <div class="card-body">
+                            <h5 class="text-center">2/3 Projects</h5>
+                            <div class="progress mt-3">
+                                <div class="progress-bar" role="progressbar" style="width: 66%;" aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <div class="text-end mt-3">
+                                <small>66% completed</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="progress-card card">
+                        <div class="card-header">
+                            <i class="fas fa-gamepad"></i> Coding Games
+                        </div>
+                        <div class="card-body">
+                            <h5 class="text-center">3/5 Games</h5>
+                            <div class="progress mt-3">
+                                <div class="progress-bar" role="progressbar" style="width: 60%;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <div class="text-end mt-3">
+                                <small>60% completed</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Achievements Section -->
+        <div class="dashboard-container">
+            <h4 class="mb-4"><i class="fas fa-trophy"></i> Achievements Unlocked</h4>
+            <div class="row">
+                <div class="col-md-3 col-6">
+                    <div class="badge-item">
+                        <div class="badge-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h6>First Code</h6>
+                        <small>100 XP earned</small>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 col-6">
+                    <div class="badge-item">
+                        <div class="badge-icon">
+                            <i class="fas fa-bug"></i>
+                        </div>
+                        <h6>Bug Hunter</h6>
+                        <small>150 XP earned</small>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 col-6">
+                    <div class="badge-item badge-locked">
+                        <div class="badge-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h6>Robot Builder</h6>
+                        <small>Locked</small>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 col-6">
+                    <div class="badge-item badge-locked">
+                        <div class="badge-icon">
+                            <i class="fas fa-game-console-handheld"></i>
+                        </div>
+                        <h6>Game Creator</h6>
+                        <small>Locked</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <button class="btn btn-outline-primary">
+                    <i class="fas fa-trophy"></i> View All Achievements
+                </button>
+            </div>
+        </div>
+        
+        <!-- Upcoming Schedule Section -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="dashboard-container">
+                    <h4 class="mb-4"><i class="fas fa-calendar-alt"></i> Upcoming Classes</h4>
+                    <div class="class-card">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5>Game Development Basics</h5>
+                                <p class="mb-0"><i class="fas fa-clock"></i> Tomorrow, 4:00 PM</p>
+                            </div>
+                            <button class="btn btn-sm btn-primary">Join</button>
+                        </div>
+                    </div>
+                    
+                    <div class="class-card">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5>Animation with JavaScript</h5>
+                                <p class="mb-0"><i class="fas fa-clock"></i> Thursday, 5:00 PM</p>
+                            </div>
+                            <button class="btn btn-sm btn-primary">Join</button>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <button class="btn btn-outline-primary">
+                            <i class="fas fa-calendar-alt"></i> View Full Schedule
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="dashboard-container">
+                    <h4 class="mb-4"><i class="fas fa-lightbulb"></i> Recommended for You</h4>
+                    <div class="class-card">
+                        <h5>Creating Your First Game</h5>
+                        <p class="mb-2">Based on your progress in JavaScript basics</p>
+                        <button class="btn btn-sm btn-primary">Start Learning</button>
+                    </div>
+                    
+                    <div class="class-card">
+                        <h5>Advanced HTML & CSS</h5>
+                        <p class="mb-2">Take your web development skills to the next level</p>
+                        <button class="btn btn-sm btn-primary">Start Learning</button>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <button class="btn btn-outline-primary">
+                            <i class="fas fa-th-list"></i> View All Courses
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav">
+        <a href="#" class="active">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="#">
+            <i class="fas fa-laptop-code"></i>
+            <span>Code</span>
+        </a>
+        <a href="#">
+            <i class="fas fa-trophy"></i>
+            <span>Awards</span>
+        </a>
+        <a href="#">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Schedule</span>
+        </a>
+        <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Login to KidCode</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-user-circle" style="font-size: 60px; color: var(--primary-color);"></i>
+                        <h4 class="mt-2">Welcome back, Coder!</h4>
+                    </div>
+                    
+                    <form>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email or Username</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                            </div>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="rememberMe">
+                            <label class="form-check-label" for="rememberMe">Remember me</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                    </form>
+                    
+                    <div class="text-center mt-3">
+                        <a href="#" class="text-decoration-none">Forgot password?</a>
+                        <p class="mt-3 mb-0">New to KidCode? <a href="#" class="text-decoration-none">Sign up now!</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle sidebar on mobile
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('mainContent').classList.toggle('active');
+        });
+        
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menuToggle');
+            
+            if (!sidebar.contains(event.target) && event.target !== menuToggle && window.innerWidth <= 992) {
+                sidebar.classList.remove('active');
+                document.getElementById('mainContent').classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

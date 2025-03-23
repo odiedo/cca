@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KidCode - Challenges</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #FE5D37;
+            --secondary-color: #FFD166;
+            --accent-color: #06D6A0;
+            --dark-color: #073B4C;
+            --light-color: #f8f9fa;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            color: var(--dark-color);
+            font-family: 'Roboto', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar styles */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: var(--primary-color);
+            background-image: linear-gradient(135deg, var(--primary-color) 0%, #ff8e63 100%);
+            color: white;
+            position: fixed;
+            padding: 20px;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .sidebar .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .sidebar .logo h2 {
+            font-weight: bold;
+        }
+        
+        .sidebar a {
+            color: white;
+            display: block;
+            padding: 12px 15px;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar a:hover, .sidebar a.active {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+        
+        /* Main content */
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .challenge-container {
+            border-radius: 15px;
+            background-color: white;
+            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        /* Challenge card styles */
+        .challenge-card {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+        
+        .challenge-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .challenge-image {
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .challenge-content {
+            padding: 20px;
+        }
+        
+        .challenge-difficulty {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        
+        .easy {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .medium {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .hard {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .challenge-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--dark-color);
+        }
+        
+        .challenge-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+        
+        .challenge-footer .badge {
+            background-color: #e9ecef;
+            color: #495057;
+            font-weight: normal;
+            padding: 5px 10px;
+        }
+        
+        .challenge-description {
+            color: #6c757d;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+        
+        /* Filter section */
+        .filter-section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .filter-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+        
+        .filter-option {
+            margin-bottom: 8px;
+        }
+        
+        /* Progress section */
+        .progress-container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .progress-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+        
+        .progress-stat {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .progress-label {
+            color: #6c757d;
+        }
+        
+        .progress-value {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .progress-bar-container {
+            height: 10px;
+            background-color: #f0f2f5;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        
+        .progress-bar-fill {
+            height: 100%;
+            background-color: var(--accent-color);
+            width: 65%;
+        }
+        
+        /* Achievement badges */
+        .achievement-badges {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        
+        .badge-item {
+            text-align: center;
+            width: 70px;
+            margin-bottom: 10px;
+        }
+        
+        .badge-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #f0f2f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 5px;
+            color: var(--primary-color);
+            font-size: 20px;
+        }
+        
+        .badge-label {
+            font-size: 11px;
+            color: #6c757d;
+        }
+        
+        .locked .badge-icon {
+            background-color: #e9ecef;
+            color: #adb5bd;
+        }
+        
+        .locked .badge-label {
+            color: #adb5bd;
+        }
+        
+        /* Challenge categories */
+        .category-tabs {
+            display: flex;
+            overflow-x: auto;
+            margin-bottom: 25px;
+            padding-bottom: 5px;
+        }
+        
+        .category-tab {
+            white-space: nowrap;
+            padding: 8px 20px;
+            background-color: white;
+            border-radius: 50px;
+            margin-right: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .category-tab.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .category-tab:hover:not(.active) {
+            background-color: #f8f9fa;
+            transform: translateY(-2px);
+        }
+        
+        /* Buttons */
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 8px;
+            padding: 8px 15px;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            background-color: #e04e2e;
+            transform: translateY(-2px);
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-outline-primary {
+            color: var(--primary-color);
+            background-color: transparent;
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 8px 15px;
+            transition: all 0.3s;
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Mobile Navigation */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            z-index: 1000;
+            box-shadow: 0px -5px 20px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+        }
+        
+        .mobile-nav a {
+            color: var(--dark-color);
+            text-align: center;
+            padding: 10px;
+            text-decoration: none;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .mobile-nav a i {
+            font-size: 20px;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+        }
+        
+        .mobile-nav a.active {
+            color: var(--primary-color);
+        }
+        
+        /* Toggle button for sidebar */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            z-index: 1001;
+            cursor: pointer;
+        }
+        
+        /* Featured challenge */
+        .featured-challenge {
+            background-color: var(--secondary-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .featured-badge {
+            position: absolute;
+            top: 15px;
+            right: -30px;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 5px 30px;
+            transform: rotate(45deg);
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .featured-content {
+            display: flex;
+            align-items: center;
+        }
+        
+        .featured-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 12px;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .featured-icon {
+            font-size: 40px;
+            color: var(--primary-color);
+        }
+        
+        .featured-details h4 {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--dark-color);
+        }
+        
+        .featured-details p {
+            color: #494538;
+            margin-bottom: 15px;
+        }
+        
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: white;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .empty-state-icon {
+            font-size: 60px;
+            color: #e9ecef;
+            margin-bottom: 20px;
+        }
+        
+        .empty-state-text {
+            color: #6c757d;
+            margin-bottom: 20px;
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content.active {
+                margin-left: 250px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                z-index: 1002;
+            }
+            
+            .main-content.active {
+                margin-left: 0;
+                padding-top: 250px;
+            }
+            
+            .mobile-nav {
+                display: flex;
+                justify-content: space-around;
+            }
+            
+            body {
+                padding-bottom: 70px;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .featured-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .featured-image {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Menu toggle button for mobile -->
+    <button class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <h2><i class="fas fa-code"></i> KidCode</h2>
+        </div>
+        <a href="index.html"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="index.html"><i class="fas fa-laptop-code"></i> Coding Playground</a>
+        <a href="challenges.html" class="active"><i class="fas fa-puzzle-piece"></i> Challenges</a>
+        <a href="#"><i class="fas fa-trophy"></i> Achievements</a>
+        <a href="#"><i class="fas fa-book"></i> Learning Path</a>
+        <a href="#"><i class="fas fa-calendar-alt"></i> Schedule</a>
+        <a href="#"><i class="fas fa-question-circle"></i> Help</a>
+        <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal"><i class="fas fa-sign-in-alt"></i> Login/Profile</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="mb-4"><i class="fas fa-puzzle-piece"></i> Coding Challenges</h2>
+                
+                <!-- Featured Challenge -->
+                <div class="featured-challenge">
+                    <div class="featured-badge">Featured</div>
+                    <div class="featured-content">
+                        <div class="featured-image">
+                            <i class="fas fa-gamepad featured-icon"></i>
+                        </div>
+                        <div class="featured-details">
+                            <h4>Space Adventure Game</h4>
+                            <p>Create a fun space game where you collect stars and avoid asteroids! Complete this challenge to earn a special Game Developer badge.</p>
+                            <button class="btn btn-dark"><i class="fas fa-rocket"></i> Start Challenge</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Category Tabs -->
+                <div class="category-tabs">
+                    <div class="category-tab active">All Challenges</div>
+                    <div class="category-tab">Games</div>
+                    <div class="category-tab">Animations</div>
+                    <div class="category-tab">Web Pages</div>
+                    <div class="category-tab">JavaScript</div>
+                    <div class="category-tab">HTML & CSS</div>
+                    <div class="category-tab">Logic Puzzles</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-8">
+                <!-- Challenges Section -->
+                <div class="challenge-container">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="mb-0"><i class="fas fa-star"></i> Available Challenges</h4>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                Sort By: Newest
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="sortDropdown">
+                                <li><a class="dropdown-item" href="#">Newest</a></li>
+                                <li><a class="dropdown-item" href="#">Oldest</a></li>
+                                <li><a class="dropdown-item" href="#">Easiest</a></li>
+                                <li><a class="dropdown-item" href="#">Hardest</a></li>
+                                <li><a class="dropdown-item" href="#">Most Popular</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <!-- Challenge Card 1 -->
+                        <div class="col-md-6 mb-4">
+                            <div class="challenge-card">
+                                <div class="challenge-image" style="background-image: url('/api/placeholder/400/200');"></div>
+                                <div class="challenge-content">
+                                    <span class="challenge-difficulty easy">Easy</span>
+                                    <h5 class="challenge-title">Button Counter</h5>
+                                    <p class="challenge-description">Create a button that counts how many times it's clicked. Learn about event handling in JavaScript.</p>
+                                    <div class="challenge-footer">
+                                        <span class="badge"><i class="fas fa-clock"></i> 15 min</span>
+                                        <button class="btn btn-primary">Start Challenge</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Challenge Card 2 -->
+                        <div class="col-md-6 mb-4">
+                            <div class="challenge-card">
+                                <div class="challenge-image" style="background-image: url('/api/placeholder/400/200');"></div>
+                                <div class="challenge-content">
+                                    <span class="challenge-difficulty easy">Easy</span>
+                                    <h5 class="challenge-title">Colorful Shapes</h5>
+                                    <p class="challenge-description">Create different shapes that change colors when clicked. Perfect for beginners!</p>
+                                    <div class="challenge-footer">
+                                        <span class="badge"><i class="fas fa-clock"></i> 20 min</span>
+                                        <button class="btn btn-primary">Start Challenge</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Challenge Card 3 -->
+                        <div class="col-md-6 mb-4">
+                            <div class="challenge-card">
+                                <div class="challenge-image" style="background-image: url('/api/placeholder/400/200');"></div>
+                                <div class="challenge-content">
+                                    <span class="challenge-difficulty medium">Medium</span>
+                                    <h5 class="challenge-title">Animated Navigation Menu</h5>
+                                    <p class="challenge-description">Create a menu that slides in and out with cool animations using CSS transitions.</p>
+                                    <div class="challenge-footer">
+                                        <span class="badge"><i class="fas fa-clock"></i> 30 min</span>
+                                        <button class="btn btn-primary">Start Challenge</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Challenge Card 4 -->
+                        <div class="col-md-6 mb-4">
+                            <div class="challenge-card">
+                                <div class="challenge-image" style="background-image: url('/api/placeholder/400/200');"></div>
+                                <div class="challenge-content">
+                                    <span class="challenge-difficulty medium">Medium</span>
+                                    <h5 class="challenge-title">Random Quote Generator</h5>
+                                    <p class="challenge-description">Create a program that displays random inspirational quotes when a button is clicked.</p>
+                                    <div class="challenge-footer">
+                                        <span class="badge"><i class="fas fa-clock"></i> 25 min</span>
+                                        <button class="btn btn-primary">Start Challenge</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Challenge Card 5 -->
+                        <div class="col-md-6 mb-4">
+                            <div class="challenge-card">
+                                <div class="challenge-image" style="background-image: url('/api/placeholder/400/200');"></div>
+                                <div class="challenge-content">
+                                    <span class="challenge-difficulty hard">Hard</span>
+                                    <h5 class="challenge-title">Memory Card Game</h5>
+                                    <p class="challenge-description">Build a memory matching game with cards that flip when clicked. Match all pairs to win!</p>
+                                    <div class="challenge-footer">
+                                        <span class="badge"><i class="fas fa-clock"></i> 45 min</span>
+                                        <button class="btn btn-primary">Start Challenge</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Challenge Card 6 -->
+                        <div class="col-md-6 mb-4">
+                            <div class="challenge-card">
+                                <div class="challenge-image" style="background-image: url('/api/placeholder/400/200');"></div>
+                                <div class="challenge-content">
+                                    <span class="challenge-difficulty hard">Hard</span>
+                                    <h5 class="challenge-title">Platformer Game</h5>
+                                    <p class="challenge-description">Create a simple platformer game where a character jumps over obstacles. Fun and challenging!</p>
+                                    <div class="challenge-footer">
+                                        <span class="badge"><i class="fas fa-clock"></i> 60 min</span>
+                                        <button class="btn btn-primary">Start Challenge</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Load More Button -->
+                    <div class="text-center mt-3">
+                        <button class="btn btn-outline-primary">
+                            <i class="fas fa-plus"></i> Load More Challenges
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <!-- Progress Section -->
+                <div class="progress-container">
+                    <h4 class="progress-title"><i class="fas fa-chart-line"></i> Your Progress</h4>
+                    
+                    <div class="progress-stat">
+                        <span class="progress-label">Challenges Completed</span>
+                        <span class="progress-value">12/40</span>
+                    </div>
+                    
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" style="width: 30%"></div>
+                    </div>
+                    
+                    <div class="progress-stat">
+                        <span class="progress-label">Current Level</span>
+                        <span class="progress-value">Coder Cadet</span>
+                    </div>
+                    
+                    <div class="progress-stat">
+                        <span class="progress-label">XP Points</span>
+                        <span class="progress-value">850 XP</span>
+                    </div>
+                    
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" style="width: 65%"></div>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <button class="btn btn-primary">
+                            <i class="fas fa-trophy"></i> View All Progress
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Achievement Badges -->
+                <div class="progress-container">
+                    <h4 class="progress-title"><i class="fas fa-medal"></i> Your Badges</h4>
+                    
+                    <div class="achievement-badges">
+                        <div class="badge-item">
+                            <div class="badge-icon">
+                                <i class="fas fa-rocket"></i>
+                            </div>
+                            <div class="badge-label">Beginner</div>
+                        </div>
+                        
+                        <div class="badge-item">
+                            <div class="badge-icon">
+                                <i class="fas fa-palette"></i>
+                            </div>
+                            <div class="badge-label">CSS Master</div>
+                        </div>
+                        
+                        <div class="badge-item">
+                            <div class="badge-icon">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <div class="badge-label">JavaScript</div>
+                        </div>
+                        
+                        <div class="badge-item locked">
+                            <div class="badge-icon">
+                                <i class="fas fa-gamepad"></i>
+                            </div>
+                            <div class="badge-label">Game Dev</div>
+                        </div>
+                        
+                        <div class="badge-item locked">
+                            <div class="badge-icon">
+                                <i class="fas fa-bug"></i>
+                            </div>
+                            <div class="badge-label">Debugger</div>
+                        </div>
+                        
+                        <div class="badge-item locked">
+                            <div class="badge-icon">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <div class="badge-label">Creative</div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <button class="btn btn-outline-primary">
+                            <i class="fas fa-medal"></i> See All Badges
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Challenge Filters -->
+                <div class="filter-section">
+                    <h4 class="filter-title"><i class="fas fa-filter"></i> Filter Challenges</h4>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Difficulty</label>
+                        <div class="filter-option">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="easyCheck" checked>
+                                <label class="form-check-label" for="easyCheck">
+                                    Easy
+                                </label>
+                            </div>
+                        </div>
+                        <div class="filter-option">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="mediumCheck" checked>
+                                <label class="form-check-label" for="mediumCheck">
+                                    Medium
+                                </label>
+                            </div>
+                        </div>
+                        <div class="filter-option">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="hardCheck" checked>
+                                <label class="form-check-label" for="hardCheck">
+                                    Hard
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Time Required</label>
+                        <div class="filter-option">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="time1" checked>
+                                <label class="form-check-label" for="time1">
+                                    Under 15 minutes
+                                </label>
+                            </div>
+                        </div>
+                        <div class="filter-option">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="time2" checked>
+                                <label class="form-check-label" for="time2">
+                                    15-30 minutes
+                                </label>
+                            </div>
+                        </div>
+                        <div class="filter-option">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="time3" checked>
+                                <label class="form-check-label" for="time3">
+                                    Over 30 minutes
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="form-label">Status</label>
+                        <div class="filter-option">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="status1" checked>
+                                <label class="form-check-label" for="status1">
+                                    Not Started
+                                </label>
+                            </div>
+                        </div>
+                        <div class="filter-option">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="status2">
+                                <label class="form-check-label" for="status2">
+                                    In Progress
+                                </label>
+                            </div>
+                        </div>
+                        <div class="filter-option">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="status3">
+                                <label class="form-check-label" for="status3">
+                                    Completed
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary w-100 mt-3">
+                        <i class="fas fa-filter"></i> Apply Filters
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav">
+        <a href="index.html"><i class="fas fa-home"></i> Home</a>
+        <a href="index.html"><i class="fas fa-laptop-code"></i> Code</a>
+        <a href="challenges.html" class="active"><i class="fas fa-puzzle-piece"></i> Challenges</a>
+        <a href="#"><i class="fas fa-trophy"></i> Badges</a>
+        <a href="#"><i class="fas fa-user"></i> Profile</a>
+    </div>
+    
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Login to KidCode</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" placeholder="Enter your username">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" placeholder="Enter your password">
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="rememberMe">
+                            <label class="form-check-label" for="rememberMe">Remember me</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <a href="#" class="text-decoration-none">Forgot password?</a>
+                        <p class="mt-2">Don't have an account? <a href="#" class="text-decoration-none">Register now</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle sidebar on mobile
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('mainContent').classList.toggle('active');
+        });
+        
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menuToggle');
+            
+            if (window.innerWidth <= 992) {
+                if (!sidebar.contains(event.target) && !menuToggle.contains(event.target) && sidebar.classList.contains('active')) {
+                    sidebar.classList.remove('active');
+                    document.getElementById('mainContent').classList.remove('active');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
