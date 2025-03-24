@@ -69,7 +69,7 @@
         
         /* Main content */
         .main-content {
-            margin-left: 250px;
+            margin-left: 0;
             padding: 20px;
             transition: all 0.3s;
         }
@@ -88,6 +88,7 @@
             flex-direction: column;
             height: calc(100vh - 220px);
             min-height: 500px;
+            font-size: 12px;
         }
         
         .code-header {
@@ -154,7 +155,7 @@
         }
         
         .preview-section {
-            margin-top: 20px;
+            margin-top: 10px;
             background-color: white;
             border-radius: 10px;
             overflow: hidden;
@@ -171,7 +172,8 @@
         }
         
         .preview-content {
-            height: 300px;
+            height: 70vh;
+            padding: 0;
             border: none;
             width: 100%;
         }
@@ -387,35 +389,15 @@
     </style>
 </head>
 <body>
-    <!-- Menu toggle button for mobile -->
-    <button class="menu-toggle" id="menuToggle">
-        <i class="fas fa-bars"></i>
-    </button>
-
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <div class="logo">
-            <h2><i class="fas fa-code"></i> CoastCode</h2>
-        </div>
-        <a href="index.html"><i class="fas fa-home"></i> Dashboard</a>
-        <a href="playground.html" class="active"><i class="fas fa-laptop-code"></i> Coding Playground</a>
-        <a href="challenges.html"><i class="fas fa-puzzle-piece"></i> Challenges</a>
-        <a href="achievement.html"><i class="fas fa-trophy"></i> Achievements</a>
-        <a href="learning.html"><i class="fas fa-book"></i> Learning Path</a>
-        <a href="schedule.html"><i class="fas fa-calendar-alt"></i> Schedule</a>
-        <a href="help.html"><i class="fas fa-question-circle"></i> Help</a>
-        <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal"><i class="fas fa-sign-in-alt"></i> Login/Profile</a>
-    </div>
-
     <!-- Main Content -->
     <div class="main-content" id="mainContent">
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 <!-- Code Playground Section -->
-                <div class="playground-container">
+                <div class="playground-container row">
                     <h4 class="mb-3"><i class="fas fa-laptop-code"></i> Code Playground</h4>
                     
-                    <div class="editor-section">
+                    <div class="editor-section col-md-6">
                         <div class="code-header">
                             <div class="language-tabs">
                                 <div class="language-tab active" data-lang="html">HTML</div>
@@ -441,7 +423,7 @@
                         </div>
                     </div>
                     
-                    <div class="preview-section">
+                    <div class="preview-section col-md-6">
                         <div class="preview-header">
                             <h5 class="mb-0">Preview</h5>
                             <button class="btn btn-sm btn-light" id="fullscreenBtn">
@@ -453,85 +435,91 @@
                 </div>
             </div>
             
-            <div class="col-lg-4">
-                <!-- Templates Section -->
-                <div class="playground-container">
-                    <h4 class="mb-3"><i class="fas fa-shapes"></i> Starter Templates</h4>
-                    
-                    <div class="template-card" id="blankTemplate">
-                        <div class="template-header">
-                            <i class="fas fa-file"></i> Blank Canvas
-                        </div>
-                        <div class="template-body">
-                            <div class="template-icon">
-                                <i class="fas fa-file-code"></i>
+            <div class="col-lg-12">
+                <div class="container-fluid">
+                    <div class="row">
+                        <!-- Templates Section -->
+                        <div class="playground-container col-md-8">
+                            <div class="container-fluid">
+                                <h4 class="mb-3"><i class="fas fa-shapes"></i> Starter Templates</h4>
+                                <div class="row">
+                                    <div class="template-card col-md-6" id="blankTemplate">
+                                        <div class="template-header">
+                                            <i class="fas fa-file"></i> Blank Canvas
+                                        </div>
+                                        <div class="template-body">
+                                            <div class="template-icon">
+                                                <i class="fas fa-file-code"></i>
+                                            </div>
+                                            <p>Start with a clean slate and build from scratch.</p>
+                                            <button class="btn btn-sm btn-primary">Use Template</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="template-card col-md-6" id="gameTemplate">
+                                        <div class="template-header">
+                                            <i class="fas fa-gamepad"></i> Simple Game
+                                        </div>
+                                        <div class="template-body">
+                                            <div class="template-icon">
+                                                <i class="fas fa-gamepad"></i>
+                                            </div>
+                                            <p>Basic structure for a simple game.</p>
+                                            <button class="btn btn-sm btn-primary">Use Template</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="template-card col-md-6" id="animationTemplate">
+                                        <div class="template-header">
+                                            <i class="fas fa-film"></i> Animation
+                                        </div>
+                                        <div class="template-body">
+                                            <div class="template-icon">
+                                                <i class="fas fa-film"></i>
+                                            </div>
+                                            <p>Create amazing animations with this template.</p>
+                                            <button class="btn btn-sm btn-primary">Use Template</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <p>Start with a clean slate and build from scratch.</p>
-                            <button class="btn btn-sm btn-primary">Use Template</button>
                         </div>
-                    </div>
-                    
-                    <div class="template-card" id="gameTemplate">
-                        <div class="template-header">
-                            <i class="fas fa-gamepad"></i> Simple Game
-                        </div>
-                        <div class="template-body">
-                            <div class="template-icon">
-                                <i class="fas fa-gamepad"></i>
+                        <!-- Challenge Section -->
+                        <div class="playground-container col-md-4">
+                            <h4 class="mb-3"><i class="fas fa-trophy"></i> Daily Challenges</h4>
+                            
+                            <div class="challenge-card">
+                                <h5>Create a Button Counter</h5>
+                                <div class="challenge-info">
+                                    <span class="challenge-difficulty easy">Easy</span>
+                                    <button class="btn btn-sm btn-primary">Try Challenge</button>
+                                </div>
                             </div>
-                            <p>Basic structure for a simple game.</p>
-                            <button class="btn btn-sm btn-primary">Use Template</button>
-                        </div>
-                    </div>
-                    
-                    <div class="template-card" id="animationTemplate">
-                        <div class="template-header">
-                            <i class="fas fa-film"></i> Animation
-                        </div>
-                        <div class="template-body">
-                            <div class="template-icon">
-                                <i class="fas fa-film"></i>
+                            
+                            <div class="challenge-card">
+                                <h5>Animated Navigation Menu</h5>
+                                <div class="challenge-info">
+                                    <span class="challenge-difficulty medium">Medium</span>
+                                    <button class="btn btn-sm btn-primary">Try Challenge</button>
+                                </div>
                             </div>
-                            <p>Create amazing animations with this template.</p>
-                            <button class="btn btn-sm btn-primary">Use Template</button>
+                            
+                            <div class="challenge-card">
+                                <h5>Memory Card Game</h5>
+                                <div class="challenge-info">
+                                    <span class="challenge-difficulty hard">Hard</span>
+                                    <button class="btn btn-sm btn-primary">Try Challenge</button>
+                                </div>
+                            </div>
+                            
+                            <div class="text-center mt-3">
+                                <button class="btn btn-outline-primary">
+                                    <i class="fas fa-trophy"></i> See All Challenges
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Challenge Section -->
-                <div class="playground-container">
-                    <h4 class="mb-3"><i class="fas fa-trophy"></i> Daily Challenges</h4>
-                    
-                    <div class="challenge-card">
-                        <h5>Create a Button Counter</h5>
-                        <div class="challenge-info">
-                            <span class="challenge-difficulty easy">Easy</span>
-                            <button class="btn btn-sm btn-primary">Try Challenge</button>
-                        </div>
-                    </div>
-                    
-                    <div class="challenge-card">
-                        <h5>Animated Navigation Menu</h5>
-                        <div class="challenge-info">
-                            <span class="challenge-difficulty medium">Medium</span>
-                            <button class="btn btn-sm btn-primary">Try Challenge</button>
-                        </div>
-                    </div>
-                    
-                    <div class="challenge-card">
-                        <h5>Memory Card Game</h5>
-                        <div class="challenge-info">
-                            <span class="challenge-difficulty hard">Hard</span>
-                            <button class="btn btn-sm btn-primary">Try Challenge</button>
-                        </div>
-                    </div>
-                    
-                    <div class="text-center mt-3">
-                        <button class="btn btn-outline-primary">
-                            <i class="fas fa-trophy"></i> See All Challenges
-                        </button>
-                    </div>
-                </div>
+                </div>                
             </div>
         </div>
     </div>
@@ -563,6 +551,7 @@
             Schedule
         </a>
     </div>
+    <button class="back-button" style=" position: fixed; top: 20px; right: 20px; background-color: red; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 16px; transition: 0.3s ease-in-out; box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);" onclick="window.history.back();"><i class="fas fa-close"></i> Close </button>
 
     <!-- Login Modal -->
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
@@ -682,222 +671,222 @@ body {
     },
     game: {
         html: `<!DOCTYPE html>
-<html>
-<head>
-    <title>My Game</title>
-</head>
-<body>
-    <h1>My Awesome Game</h1>
-    <div id="game-container">
-        <div id="player"></div>
-        <div id="target"></div>
-    </div>
-    <div id="score">Score: <span id="score-value">0</span></div>
-</body>
-</html>`,
-        css: `body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background-color: #f0f2f5;
-}
+            <html>
+            <head>
+                <title>My Game</title>
+            </head>
+            <body>
+                <h1>My Awesome Game</h1>
+                <div id="game-container">
+                    <div id="player"></div>
+                    <div id="target"></div>
+                </div>
+                <div id="score">Score: <span id="score-value">0</span></div>
+            </body>
+            </html>`,
+                    css: `body {
+                font-family: Arial, sans-serif;
+                text-align: center;
+                background-color: #f0f2f5;
+            }
 
-#game-container {
-    width: 400px;
-    height: 300px;
-    margin: 0 auto;
-    border: 2px solid #333;
-    position: relative;
-    background-color: #fff;
-    overflow: hidden;
-}
+            #game-container {
+                width: 400px;
+                height: 300px;
+                margin: 0 auto;
+                border: 2px solid #333;
+                position: relative;
+                background-color: #fff;
+                overflow: hidden;
+            }
 
-#player {
-    width: 30px;
-    height: 30px;
-    background-color: #FE5D37;
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-}
+            #player {
+                width: 30px;
+                height: 30px;
+                background-color: #FE5D37;
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+            }
 
-#target {
-    width: 20px;
-    height: 20px;
-    background-color: #06D6A0;
-    position: absolute;
-    top: 20px;
-    left: 50px;
-    border-radius: 50%;
-}
+            #target {
+                width: 20px;
+                height: 20px;
+                background-color: #06D6A0;
+                position: absolute;
+                top: 20px;
+                left: 50px;
+                border-radius: 50%;
+            }
 
-#score {
-    margin-top: 20px;
-    font-size: 20px;
-    font-weight: bold;
-}`,
-        js: `// Game variables
-let score = 0;
-let playerSpeed = 5;
-let playerX = 185; // Center position
-const player = document.getElementById('player');
-const target = document.getElementById('target');
-const scoreValue = document.getElementById('score-value');
+            #score {
+                margin-top: 20px;
+                font-size: 20px;
+                font-weight: bold;
+            }`,
+                    js: `// Game variables
+            let score = 0;
+            let playerSpeed = 5;
+            let playerX = 185; // Center position
+            const player = document.getElementById('player');
+            const target = document.getElementById('target');
+            const scoreValue = document.getElementById('score-value');
 
-// Set up key controls
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'ArrowLeft') {
-        movePlayer(-playerSpeed);
-    } else if (event.key === 'ArrowRight') {
-        movePlayer(playerSpeed);
-    }
-});
+            // Set up key controls
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'ArrowLeft') {
+                    movePlayer(-playerSpeed);
+                } else if (event.key === 'ArrowRight') {
+                    movePlayer(playerSpeed);
+                }
+            });
 
-// Move the player
-function movePlayer(speed) {
-    playerX += speed;
-    // Keep player within boundaries
-    if (playerX < 0) playerX = 0;
-    if (playerX > 370) playerX = 370;
-    player.style.left = playerX + 'px';
-    checkCollision();
-}
+            // Move the player
+            function movePlayer(speed) {
+                playerX += speed;
+                // Keep player within boundaries
+                if (playerX < 0) playerX = 0;
+                if (playerX > 370) playerX = 370;
+                player.style.left = playerX + 'px';
+                checkCollision();
+            }
 
-// Check if player caught the target
-function checkCollision() {
-    const playerRect = player.getBoundingClientRect();
-    const targetRect = target.getBoundingClientRect();
-    
-    if (playerRect.left < targetRect.right &&
-        playerRect.right > targetRect.left &&
-        playerRect.top < targetRect.bottom &&
-        playerRect.bottom > targetRect.top) {
-        // Collision detected!
-        score += 10;
-        scoreValue.textContent = score;
-        resetTarget();
-    }
-}
+            // Check if player caught the target
+            function checkCollision() {
+                const playerRect = player.getBoundingClientRect();
+                const targetRect = target.getBoundingClientRect();
+                
+                if (playerRect.left < targetRect.right &&
+                    playerRect.right > targetRect.left &&
+                    playerRect.top < targetRect.bottom &&
+                    playerRect.bottom > targetRect.top) {
+                    // Collision detected!
+                    score += 10;
+                    scoreValue.textContent = score;
+                    resetTarget();
+                }
+            }
 
-// Reset target to a new position
-function resetTarget() {
-    const randomX = Math.floor(Math.random() * 380);
-    const randomY = Math.floor(Math.random() * 250);
-    target.style.left = randomX + 'px';
-    target.style.top = randomY + 'px';
-}
+            // Reset target to a new position
+            function resetTarget() {
+                const randomX = Math.floor(Math.random() * 380);
+                const randomY = Math.floor(Math.random() * 250);
+                target.style.left = randomX + 'px';
+                target.style.top = randomY + 'px';
+            }
 
-// Start the game
-resetTarget();`
-    },
-    animation: {
-        html: `<!DOCTYPE html>
-<html>
-<head>
-    <title>Animation Demo</title>
-</head>
-<body>
-    <h1>Fun with Animations!</h1>
-    <div class="container">
-        <div class="box" id="box1"></div>
-        <div class="box" id="box2"></div>
-        <div class="box" id="box3"></div>
-    </div>
-    <button id="animateBtn">Animate!</button>
-</body>
-</html>`,
-        css: `body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background-color: #f0f2f5;
-    padding: 20px;
-}
+            // Start the game
+            resetTarget();`
+                },
+                animation: {
+                    html: `<!DOCTYPE html>
+            <html>
+            <head>
+                <title>Animation Demo</title>
+            </head>
+            <body>
+                <h1>Fun with Animations!</h1>
+                <div class="container">
+                    <div class="box" id="box1"></div>
+                    <div class="box" id="box2"></div>
+                    <div class="box" id="box3"></div>
+                </div>
+                <button id="animateBtn">Animate!</button>
+            </body>
+            </html>`,
+                    css: `body {
+                font-family: Arial, sans-serif;
+                text-align: center;
+                background-color: #f0f2f5;
+                padding: 20px;
+            }
 
-.container {
-    margin: 30px auto;
-    height: 200px;
-    position: relative;
-}
+            .container {
+                margin: 30px auto;
+                height: 200px;
+                position: relative;
+            }
 
-.box {
-    width: 50px;
-    height: 50px;
-    position: absolute;
-    left: 0;
-    border-radius: 5px;
-    transition: all 0.5s ease;
-}
+            .box {
+                width: 50px;
+                height: 50px;
+                position: absolute;
+                left: 0;
+                border-radius: 5px;
+                transition: all 0.5s ease;
+            }
 
-#box1 {
-    background-color: #FE5D37;
-    top: 0;
-}
+            #box1 {
+                background-color: #FE5D37;
+                top: 0;
+            }
 
-#box2 {
-    background-color: #FFD166;
-    top: 70px;
-}
+            #box2 {
+                background-color: #FFD166;
+                top: 70px;
+            }
 
-#box3 {
-    background-color: #06D6A0;
-    top: 140px;
-}
+            #box3 {
+                background-color: #06D6A0;
+                top: 140px;
+            }
 
-button {
-    background-color: #FE5D37;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-}`,
-        js: `// Animation code
-const box1 = document.getElementById('box1');
-const box2 = document.getElementById('box2');
-const box3 = document.getElementById('box3');
-const animateBtn = document.getElementById('animateBtn');
+            button {
+                background-color: #FE5D37;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 16px;
+            }`,
+                    js: `// Animation code
+            const box1 = document.getElementById('box1');
+            const box2 = document.getElementById('box2');
+            const box3 = document.getElementById('box3');
+            const animateBtn = document.getElementById('animateBtn');
 
-let animated = false;
+            let animated = false;
 
-animateBtn.addEventListener('click', function() {
-    if (!animated) {
-        // First animation
-        box1.style.left = '80%';
-        box1.style.transform = 'rotate(360deg)';
-        
-        // Second animation (with delay)
-        setTimeout(() => {
-            box2.style.left = '80%';
-            box2.style.transform = 'rotate(360deg)';
-        }, 200);
-        
-        // Third animation (with delay)
-        setTimeout(() => {
-            box3.style.left = '80%';
-            box3.style.transform = 'rotate(360deg)';
-        }, 400);
-        
-        animateBtn.textContent = 'Reset';
-    } else {
-        // Reset animations
-        box1.style.left = '0';
-        box1.style.transform = 'rotate(0)';
-        box2.style.left = '0';
-        box2.style.transform = 'rotate(0)';
-        box3.style.left = '0';
-        box3.style.transform = 'rotate(0)';
-        
-        animateBtn.textContent = 'Animate!';
-    }
-    
-    animated = !animated;
-});`
-    }
-};
+            animateBtn.addEventListener('click', function() {
+                if (!animated) {
+                    // First animation
+                    box1.style.left = '80%';
+                    box1.style.transform = 'rotate(360deg)';
+                    
+                    // Second animation (with delay)
+                    setTimeout(() => {
+                        box2.style.left = '80%';
+                        box2.style.transform = 'rotate(360deg)';
+                    }, 200);
+                    
+                    // Third animation (with delay)
+                    setTimeout(() => {
+                        box3.style.left = '80%';
+                        box3.style.transform = 'rotate(360deg)';
+                    }, 400);
+                    
+                    animateBtn.textContent = 'Reset';
+                } else {
+                    // Reset animations
+                    box1.style.left = '0';
+                    box1.style.transform = 'rotate(0)';
+                    box2.style.left = '0';
+                    box2.style.transform = 'rotate(0)';
+                    box3.style.left = '0';
+                    box3.style.transform = 'rotate(0)';
+                    
+                    animateBtn.textContent = 'Animate!';
+                }
+                
+                animated = !animated;
+            });`
+                }
+            };
 
-// Wait for DOM to be fully loaded
-document.addEventListener('DOMContentLoaded', function() {
+    // Wait for DOM to be fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
     // Initialize CodeMirror editors
     const htmlEditor = CodeMirror(document.getElementById('htmlEditor'), {
         mode: 'htmlmixed',
@@ -1044,114 +1033,116 @@ document.addEventListener('DOMContentLoaded', function() {
             // In a real implementation, you would set the editors with challenge code
             if (challengeTitle === 'Create a Button Counter') {
                 htmlEditor.setValue(`<!DOCTYPE html>
-<html>
-<head>
-    <title>Button Counter Challenge</title>
-</head>
-<body>
-    <h1>Button Counter Challenge</h1>
-    <p>Click the button to increase the counter:</p>
-    <button id="counterBtn">Click me!</button>
-    <div id="counter">0</div>
-</body>
-</html>`);
-                
-                cssEditor.setValue(`body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    padding: 20px;
-}
+                <html>
+                <head>
+                    <title>Button Counter Challenge</title>
+                </head>
+                <body>
+                    <h1>Button Counter Challenge</h1>
+                    <p>Click the button to increase the counter:</p>
+                    <button id="counterBtn">Click me!</button>
+                    <div id="counter">0</div>
+                </body>
+                </html>`);
+                                
+                                cssEditor.setValue(`body {
+                    font-family: Arial, sans-serif;
+                    text-align: center;
+                    padding: 20px;
+                }
 
-#counterBtn {
-    background-color: #FE5D37;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-}
+                #counterBtn {
+                    background-color: #FE5D37;
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    border-radius: 5px;
+                    cursor: pointer;
+                }
 
-#counter {
-    font-size: 24px;
-    margin-top: 20px;
-    font-weight: bold;
-}`);
-                
-                jsEditor.setValue(`// Challenge: Complete the code to make the counter work
-// Hint: You need to add an event listener to the button
+                #counter {
+                    font-size: 24px;
+                    margin-top: 20px;
+                    font-weight: bold;
+                }`);
+                                
+                                jsEditor.setValue(`// Challenge: Complete the code to make the counter work
+                // Hint: You need to add an event listener to the button
 
-// Your code here
+                // Your code here
 
-`);
+                `);
                 
                 updatePreview();
-            }
+                }
+            });
         });
-    });
 
-    // Mobile navigation and sidebar toggle
-    document.getElementById('menuToggle').addEventListener('click', () => {
-        const sidebar = document.getElementById('sidebar');
-        const mainContent = document.getElementById('mainContent');
-        
-        sidebar.classList.toggle('active');
-        mainContent.classList.toggle('active');
-    });
+        // Mobile navigation and sidebar toggle
+        document.getElementById('menuToggle').addEventListener('click', () => {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            
+            sidebar.classList.toggle('active');
+            mainContent.classList.toggle('active');
+        });
 
-    // Helper function to show notifications
-    function showNotification(message) {
-        // Create notification element
-        const notification = document.createElement('div');
-        notification.style.position = 'fixed';
-        notification.style.bottom = '20px';
-        notification.style.right = '20px';
-        notification.style.backgroundColor = 'rgba(6, 214, 160, 0.9)';
-        notification.style.color = 'white';
-        notification.style.padding = '10px 20px';
-        notification.style.borderRadius = '5px';
-        notification.style.zIndex = '1050';
-        notification.textContent = message;
-        
-        // Add to body
-        document.body.appendChild(notification);
-        
-        // Remove after 3 seconds
-        setTimeout(() => {
-            notification.style.opacity = '0';
-            notification.style.transition = 'opacity 0.5s ease';
+        // Helper function to show notifications
+        function showNotification(message) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.position = 'fixed';
+            notification.style.bottom = '20px';
+            notification.style.right = '20px';
+            notification.style.backgroundColor = 'rgba(6, 214, 160, 0.9)';
+            notification.style.color = 'white';
+            notification.style.padding = '10px 20px';
+            notification.style.borderRadius = '5px';
+            notification.style.zIndex = '1050';
+            notification.textContent = message;
+            
+            // Add to body
+            document.body.appendChild(notification);
+            
+            // Remove after 3 seconds
             setTimeout(() => {
-                document.body.removeChild(notification);
-            }, 500);
-        }, 3000);
-    }
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 500);
+            }, 3000);
+        }
 
-    // Modal related code
-    const loginForm = document.querySelector('#loginModal form');
-    if (loginForm) {
-        loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
-            // Here you would handle the login logic
-            // For demonstration, we'll just show a notification
-            showNotification(`Welcome back, ${email.split('@')[0]}!`);
-            
-            // Close the modal
-            const modal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
-            modal.hide();
-        });
-    }
+        // Modal related code
+        const loginForm = document.querySelector('#loginModal form');
+        if (loginForm) {
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                // Here you would handle the login logic
+                // For demonstration, we'll just show a notification
+                showNotification(`Welcome back, ${email.split('@')[0]}!`);
+                
+                // Close the modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+                modal.hide();
+            });
+        }
 
-    // Handle challenge buttons in mobile view
-    document.querySelectorAll('.mobile-nav a').forEach(link => {
-        link.addEventListener('click', function(e) {
-            // Remove active class from all links
-            document.querySelectorAll('.mobile-nav a').forEach(l => l.classList.remove('active'));
-            
-            // Add active class to clicked link
-            this.classList.add('active');
+        // Handle challenge buttons in mobile view
+        document.querySelectorAll('.mobile-nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Remove active class from all links
+                document.querySelectorAll('.mobile-nav a').forEach(l => l.classList.remove('active'));
+                
+                // Add active class to clicked link
+                this.classList.add('active');
+            });
         });
     });
-});
     </script>
+    </body>
+</html>
