@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoastCode - Class Schedule</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #FE5D37;
+            --secondary-color: #FFD166;
+            --accent-color: #06D6A0;
+            --dark-color: #073B4C;
+            --light-color: #f8f9fa;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            color: var(--dark-color);
+            font-family: 'Roboto', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar styles */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: var(--primary-color);
+            background-image: linear-gradient(135deg, var(--primary-color) 0%, #ff8e63 100%);
+            color: white;
+            position: fixed;
+            padding: 20px;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .sidebar .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .sidebar .logo h2 {
+            font-weight: bold;
+        }
+        
+        .sidebar a {
+            color: white;
+            display: block;
+            padding: 12px 15px;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar a:hover, .sidebar a.active {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+        
+        /* Main content */
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .dashboard-container {
+            border-radius: 15px;
+            background-color: white;
+            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .schedule-header {
+            background-image: linear-gradient(135deg, #73a5ff 0%, #5477f5 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Class cards */
+        .class-card {
+            border-left: 5px solid var(--primary-color);
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+        }
+        
+        .class-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .class-card.past {
+            border-left-color: #ccc;
+            opacity: 0.7;
+        }
+        
+        .class-card.now {
+            border-left-color: var(--accent-color);
+            background-color: #e9fff7;
+        }
+        
+        /* Calendar styling */
+        .calendar-container {
+            margin-bottom: 30px;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+        
+        .calendar-day-header {
+            text-align: center;
+            font-weight: bold;
+            padding: 10px;
+        }
+        
+        .calendar-day {
+            height: 60px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            text-align: center;
+            padding: 5px;
+            background-color: white;
+            position: relative;
+        }
+        
+        .calendar-day:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .calendar-day.active {
+            border: 2px solid var(--primary-color);
+            background-color: #fff1ee;
+        }
+        
+        .calendar-day.has-event:after {
+            content: "";
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+        }
+        
+        .calendar-day.disabled {
+            color: #ccc;
+            background-color: #f9f9f9;
+        }
+        
+        /* Filter tabs */
+        .filter-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+        
+        .filter-tab {
+            padding: 10px 20px;
+            margin-right: 10px;
+            border-radius: 20px;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+        
+        .filter-tab:hover {
+            background-color: #e9ecef;
+        }
+        
+        .filter-tab.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        /* Buttons */
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            background-color: #e04e2e;
+            transform: translateY(-2px);
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+            border-radius: 8px;
+            padding: 10px 20px;
+            transition: all 0.3s;
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-accent {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            transition: all 0.3s;
+        }
+        
+        .btn-accent:hover {
+            background-color: #05b989;
+            transform: translateY(-2px);
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Mobile Navigation */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            z-index: 1000;
+            box-shadow: 0px -5px 20px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+        }
+        
+        .mobile-nav a {
+            color: var(--dark-color);
+            text-align: center;
+            padding: 10px;
+            text-decoration: none;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .mobile-nav a i {
+            font-size: 20px;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+        }
+        
+        .mobile-nav a.active {
+            color: var(--primary-color);
+        }
+        
+        /* Toggle button for sidebar */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            z-index: 1001;
+            cursor: pointer;
+        }
+        
+        /* Instructor card */
+        .instructor-card {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            margin-bottom: 15px;
+        }
+        
+        .instructor-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+        }
+        
+        /* Tooltips */
+        .tooltip-custom {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .tooltip-custom .tooltip-text {
+            visibility: hidden;
+            width: 120px;
+            background-color: var(--dark-color);
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .tooltip-custom:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content.active {
+                margin-left: 250px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                z-index: 1002;
+            }
+            
+            .main-content.active {
+                margin-left: 0;
+                padding-top: 250px;
+            }
+            
+            .mobile-nav {
+                display: flex;
+                justify-content: space-around;
+            }
+            
+            body {
+                padding-bottom: 70px;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr);
+            }
+            
+            .calendar-day {
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Menu toggle button for mobile -->
+    <button class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <h2><i class="fas fa-code"></i> CoastCode</h2>
+        </div>
+        <a href="index.html"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="playground.html"><i class="fas fa-laptop-code"></i> Coding Playground</a>
+        <a href="challenges.html"><i class="fas fa-puzzle-piece"></i> Challenges</a>
+        <a href="achievement.html"><i class="fas fa-trophy"></i> Achievements</a>
+        <a href="learning.html"><i class="fas fa-book"></i> Learning Path</a>
+        <a href="schedule.html" class="active"><i class="fas fa-calendar-alt"></i> Schedule</a>
+        <a href="help.html"><i class="fas fa-question-circle"></i> Help</a>
+        <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal"><i class="fas fa-sign-in-alt"></i> Login/Profile</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <!-- Schedule Header -->
+        <div class="schedule-header">
+            <h2><i class="fas fa-calendar-alt"></i> Your Class Schedule</h2>
+            <p>Manage your coding classes, set reminders, and never miss a learning opportunity!</p>
+            <button class="btn btn-light mt-2" data-bs-toggle="modal" data-bs-target="#addClassModal">
+                <i class="fas fa-plus-circle"></i> Add to Calendar
+            </button>
+        </div>
+
+        <!-- Calendar Section -->
+        <div class="dashboard-container calendar-container">
+            <div class="calendar-header">
+                <button class="btn btn-sm btn-outline-primary"><i class="fas fa-chevron-left"></i></button>
+                <h4>March 2025</h4>
+                <button class="btn btn-sm btn-outline-primary"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            
+            <div class="calendar-grid">
+                <!-- Day Headers -->
+                <div class="calendar-day-header">Sun</div>
+                <div class="calendar-day-header">Mon</div>
+                <div class="calendar-day-header">Tue</div>
+                <div class="calendar-day-header">Wed</div>
+                <div class="calendar-day-header">Thu</div>
+                <div class="calendar-day-header">Fri</div>
+                <div class="calendar-day-header">Sat</div>
+                
+                <!-- Previous Month -->
+                <div class="calendar-day disabled">23</div>
+                <div class="calendar-day disabled">24</div>
+                <div class="calendar-day disabled">25</div>
+                <div class="calendar-day disabled">26</div>
+                <div class="calendar-day disabled">27</div>
+                <div class="calendar-day disabled">28</div>
+                <div class="calendar-day">1</div>
+                
+                <!-- Current Month -->
+                <div class="calendar-day">2</div>
+                <div class="calendar-day">3</div>
+                <div class="calendar-day">4</div>
+                <div class="calendar-day">5</div>
+                <div class="calendar-day">6</div>
+                <div class="calendar-day">7</div>
+                <div class="calendar-day">8</div>
+                
+                <div class="calendar-day">9</div>
+                <div class="calendar-day">10</div>
+                <div class="calendar-day">11</div>
+                <div class="calendar-day">12</div>
+                <div class="calendar-day">13</div>
+                <div class="calendar-day">14</div>
+                <div class="calendar-day">15</div>
+                
+                <div class="calendar-day">16</div>
+                <div class="calendar-day">17</div>
+                <div class="calendar-day">18</div>
+                <div class="calendar-day">19</div>
+                <div class="calendar-day">20</div>
+                <div class="calendar-day">21</div>
+                <div class="calendar-day">22</div>
+                
+                <div class="calendar-day">23</div>
+                <div class="calendar-day active has-event">24</div>
+                <div class="calendar-day has-event">25</div>
+                <div class="calendar-day">26</div>
+                <div class="calendar-day has-event">27</div>
+                <div class="calendar-day">28</div>
+                <div class="calendar-day">29</div>
+                
+                <div class="calendar-day">30</div>
+                <div class="calendar-day">31</div>
+                <div class="calendar-day disabled">1</div>
+                <div class="calendar-day disabled">2</div>
+                <div class="calendar-day disabled">3</div>
+                <div class="calendar-day disabled">4</div>
+                <div class="calendar-day disabled">5</div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <button class="btn btn-sm btn-outline-primary me-2">Today</button>
+                <button class="btn btn-sm btn-outline-primary">Week View</button>
+            </div>
+        </div>
+        
+        <!-- Class Filter Tabs -->
+        <div class="filter-tabs">
+            <div class="filter-tab active">All Classes</div>
+            <div class="filter-tab">Live Sessions</div>
+            <div class="filter-tab">Recorded Lessons</div>
+            <div class="filter-tab">Coding Challenges</div>
+            <div class="filter-tab">Group Projects</div>
+            <div class="filter-tab">1-on-1 Mentoring</div>
+        </div>
+
+        <!-- Today's Schedule -->
+        <div class="dashboard-container">
+            <h4 class="mb-4"><i class="fas fa-calendar-day"></i> Today's Schedule (March 24)</h4>
+            
+            <div class="class-card past">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="badge bg-secondary mb-2">09:00 AM - 10:00 AM</span>
+                        <h5>Morning Code Review</h5>
+                        <p class="mb-1"><i class="fas fa-chalkboard-teacher"></i> Ms. Sarah Johnson</p>
+                        <p class="mb-0 text-muted"><small><i class="fas fa-check-circle text-success"></i> Completed</small></p>
+                    </div>
+                    <button class="btn btn-sm btn-outline-secondary" disabled>Finished</button>
+                </div>
+            </div>
+            
+            <div class="class-card now">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="badge bg-success mb-2">01:00 PM - 02:30 PM</span>
+                        <h5>Game Development Basics</h5>
+                        <p class="mb-1"><i class="fas fa-chalkboard-teacher"></i> Mr. David Chen</p>
+                        <p class="mb-0 text-success"><small><i class="fas fa-circle-play"></i> In Progress</small></p>
+                    </div>
+                    <button class="btn btn-sm btn-accent">Join Now</button>
+                </div>
+            </div>
+            
+            <div class="class-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="badge bg-primary mb-2">04:00 PM - 05:00 PM</span>
+                        <h5>JavaScript Fun: Animation Workshop</h5>
+                        <p class="mb-1"><i class="fas fa-chalkboard-teacher"></i> Ms. Emily Rodriguez</p>
+                        <p class="mb-0 text-muted"><small><i class="fas fa-clock"></i> Starting in 3 hours</small></p>
+                    </div>
+                    <div>
+                        <button class="btn btn-sm btn-primary me-2">Set Reminder</button>
+                        <button class="btn btn-sm btn-outline-primary">Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Upcoming Classes -->
+        <div class="dashboard-container">
+            <h4 class="mb-4"><i class="fas fa-calendar-week"></i> Upcoming Classes</h4>
+            
+            <div class="class-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="badge bg-primary mb-2">Tomorrow, 03:30 PM - 05:00 PM</span>
+                        <h5>Building Your First Website</h5>
+                        <p class="mb-1"><i class="fas fa-chalkboard-teacher"></i> Mr. James Wilson</p>
+                        <p class="mb-0 text-muted"><small><i class="fas fa-users"></i> 12 students enrolled</small></p>
+                    </div>
+                    <div>
+                        <button class="btn btn-sm btn-primary me-2">Set Reminder</button>
+                        <button class="btn btn-sm btn-outline-primary">Details</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="class-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="badge bg-primary mb-2">Thursday, 04:00 PM - 05:30 PM</span>
+                        <h5>Animation with JavaScript</h5>
+                        <p class="mb-1"><i class="fas fa-chalkboard-teacher"></i> Ms. Emily Rodriguez</p>
+                        <p class="mb-0 text-muted"><small><i class="fas fa-users"></i> 8 students enrolled</small></p>
+                    </div>
+                    <div>
+                        <button class="btn btn-sm btn-primary me-2">Set Reminder</button>
+                        <button class="btn btn-sm btn-outline-primary">Details</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="class-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="badge bg-primary mb-2">Friday, 02:00 PM - 03:30 PM</span>
+                        <h5>Problem Solving with Python</h5>
+                        <p class="mb-1"><i class="fas fa-chalkboard-teacher"></i> Mr. Robert Kim</p>
+                        <p class="mb-0 text-muted"><small><i class="fas fa-users"></i> 15 students enrolled</small></p>
+                    </div>
+                    <div>
+                        <button class="btn btn-sm btn-primary me-2">Set Reminder</button>
+                        <button class="btn btn-sm btn-outline-primary">Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Your Instructors -->
+        <div class="dashboard-container">
+            <h4 class="mb-4"><i class="fas fa-chalkboard-teacher"></i> Your Instructors</h4>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="instructor-card">
+                        <div class="instructor-image">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1">Ms. Emily Rodriguez</h5>
+                            <p class="mb-1"><small><i class="fas fa-star text-warning"></i> JavaScript & Animation Expert</small></p>
+                            <button class="btn btn-sm btn-outline-primary mt-1">View Profile</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <div class="instructor-card">
+                        <div class="instructor-image">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1">Mr. David Chen</h5>
+                            <p class="mb-1"><small><i class="fas fa-star text-warning"></i> Game Development Specialist</small></p>
+                            <button class="btn btn-sm btn-outline-primary mt-1">View Profile</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <div class="instructor-card">
+                        <div class="instructor-image">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1">Mr. James Wilson</h5>
+                            <p class="mb-1"><small><i class="fas fa-star text-warning"></i> Web Development Instructor</small></p>
+                            <button class="btn btn-sm btn-outline-primary mt-1">View Profile</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <div class="instructor-card">
+                        <div class="instructor-image">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1">Mr. Robert Kim</h5>
+                            <p class="mb-1"><small><i class="fas fa-star text-warning"></i> Python & Algorithms Expert</small></p>
+                            <button class="btn btn-sm btn-outline-primary mt-1">View Profile</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav">
+        <a href="index.html">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="playground.html">
+            <i class="fas fa-laptop-code"></i>
+            <span>Code</span>
+        </a>
+        <a href="achievement.html">
+            <i class="fas fa-trophy"></i>
+            <span>Awards</span>
+        </a>
+        <a href="schedule.html" class="active">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Schedule</span>
+        </a>
+        <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Login to CoastCode</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-user-circle" style="font-size: 60px; color: var(--primary-color);"></i>
+                        <h4 class="mt-2">Welcome back, Coder!</h4>
+                    </div>
+                    
+                    <form>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email or Username</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                            </div>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="rememberMe">
+                            <label class="form-check-label" for="rememberMe">Remember me</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                    </form>
+                    
+                    <div class="text-center mt-3">
+                        <a href="#" class="text-decoration-none">Forgot password?</a>
+                        <p class="mt-3 mb-0">New to CoastCode? <a href="#" class="text-decoration-none">Sign up now!</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Class Modal -->
+    <div class="modal fade" id="addClassModal" tabindex="-1" aria-labelledby="addClassModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addClassModalLabel">Add Class to Calendar</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="className" class="form-label">Class Name</label>
+                            <input type="text" class="form-control" id="className" placeholder="Enter class name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="classDate" class="form-label">Date</label>
+                            <input type="date" class="form-control" id="classDate" required>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="startTime" class="form-label">Start Time</label>
+                                <input type="time" class="form-control" id="startTime" required>
+                            </div>
+                            <div class="col">
+                                <label for="endTime" class="form-label">End Time</label>
+                                <input type="time" class="form-control" id="endTime" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="classType" class="form-label">Class Type</label>
+                            <select class="form-select" id="classType" required>
+                                <option value="" selected disabled>Select class type</option>
+                                <option value="live">Live Session</option>
+                                <option value="recorded">Recorded Lesson</option>
+                                <option value="challenge">Coding Challenge</option>
+                                <option value="project">Group Project</option>
+                                <option value="mentoring">1-on-1 Mentoring</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="instructor" class="form-label">Instructor</label>
+                            <select class="form-select" id="instructor">
+                                <option value="" selected disabled>Select instructor</option>
+                                <option value="rodriguez">Ms. Emily Rodriguez</option>
+                                <option value="chen">Mr. David Chen</option>
+                                <option value="wilson">Mr. James Wilson</option>
+                                <option value="kim">Mr. Robert Kim</option>
+                                <option value="johnson">Ms. Sarah Johnson</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description (Optional)</label>
+                            <textarea class="form-control" id="description" rows="3" placeholder="Enter class description"></textarea>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="setReminder">
+                            <label class="form-check-label" for="setReminder">Set reminder 15 minutes before class</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Add to Calendar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle sidebar on mobile
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('mainContent').classList.toggle('active');
+        });
+        
+        // Make calendar days interactive
+        document.querySelectorAll('.calendar-day:not(.disabled)').forEach(day => {
+            day.addEventListener('click', function() {
+                document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // Make filter tabs interactive
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // Add reminder functionality
+        document.querySelectorAll('.btn-primary').forEach(btn => {
+            if (btn.textContent.includes('Reminder')) {
+                btn.addEventListener('click', function() {
+                    alert('Reminder set! You will be notified before the class starts.');
+                    this.textContent = 'Reminder Set';
+                    this.classList.remove('btn-primary');
+                    this.classList.add('btn-success');
+                });
+            }
+        });
+    </script>
+</body>
+</html>ss

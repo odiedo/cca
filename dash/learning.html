@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoastCode - Learning Path</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #FE5D37;
+            --secondary-color: #FFD166;
+            --accent-color: #06D6A0;
+            --dark-color: #073B4C;
+            --light-color: #f8f9fa;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            color: var(--dark-color);
+            font-family: 'Roboto', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar styles */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: var(--primary-color);
+            background-image: linear-gradient(135deg, var(--primary-color) 0%, #ff8e63 100%);
+            color: white;
+            position: fixed;
+            padding: 20px;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .sidebar .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .sidebar .logo h2 {
+            font-weight: bold;
+        }
+        
+        .sidebar a {
+            color: white;
+            display: block;
+            padding: 12px 15px;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar a:hover, .sidebar a.active {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+        
+        /* Main content */
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .dashboard-container {
+            border-radius: 15px;
+            background-color: white;
+            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .welcome-banner {
+            background-image: linear-gradient(135deg, #73a5ff 0%, #5477f5 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .welcome-banner::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150px;
+            height: 100%;
+            background-image: url('/api/placeholder/150/150');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: right center;
+            opacity: 0.3;
+        }
+        
+        /* Progress cards */
+        .progress-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress-card .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+            border: none;
+            padding: 15px;
+        }
+        
+        .progress-card .card-body {
+            padding: 20px;
+        }
+        
+        .progress-bar {
+            background-color: var(--primary-color);
+            height: 15px;
+            border-radius: 10px;
+        }
+        
+        .progress {
+            height: 15px;
+            border-radius: 10px;
+            background-color: #e9ecef;
+        }
+        
+        /* Learning paths */
+        .path-container {
+            position: relative;
+            padding-left: 50px;
+            margin-bottom: 50px;
+        }
+        
+        .path-timeline {
+            position: absolute;
+            top: 0;
+            left: 20px;
+            width: 4px;
+            height: 100%;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+        }
+        
+        .path-item {
+            position: relative;
+            padding: 20px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            transition: all 0.3s;
+        }
+        
+        .path-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .path-item::before {
+            content: "";
+            position: absolute;
+            left: -43px;
+            top: 20px;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            border: 5px solid white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .path-item.completed::before {
+            background-color: var(--accent-color);
+        }
+        
+        .path-item.locked::before {
+            background-color: #ccc;
+        }
+        
+        .path-item.active::before {
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0px rgba(254, 93, 55, 0.7);
+            }
+            100% {
+                box-shadow: 0 0 0 10px rgba(254, 93, 55, 0);
+            }
+        }
+        
+        .module-card {
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            padding: 15px;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .module-card:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-3px);
+        }
+        
+        .module-card.completed {
+            border-left: 5px solid var(--accent-color);
+        }
+        
+        .module-card.in-progress {
+            border-left: 5px solid var(--secondary-color);
+        }
+        
+        .module-card.locked {
+            border-left: 5px solid #ccc;
+            opacity: 0.7;
+        }
+        
+        .status-badge {
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 20px;
+        }
+        
+        .status-completed {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .status-in-progress {
+            background-color: var(--secondary-color);
+            color: var(--dark-color);
+        }
+        
+        .status-locked {
+            background-color: #ccc;
+            color: var(--dark-color);
+        }
+        
+        /* Featured courses */
+        .course-card {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+        
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .course-image {
+            height: 160px;
+            background-color: #e9ecef;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .course-content {
+            padding: 20px;
+        }
+        
+        .course-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--secondary-color);
+            color: var(--dark-color);
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 20px;
+        }
+        
+        .course-stats {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 15px;
+            margin-top: 15px;
+            border-top: 1px solid #f0f0f0;
+            font-size: 14px;
+            color: #777;
+        }
+        
+        /* Buttons */
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            background-color: #e04e2e;
+            transform: translateY(-2px);
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+            border-radius: 8px;
+            padding: 10px 20px;
+            transition: all 0.3s;
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-success {
+            background-color: var(--accent-color);
+            border: none;
+            border-radius: 8px;
+            padding: 8px 15px;
+            transition: all 0.3s;
+        }
+        
+        .btn-success:hover {
+            background-color: #05b386;
+            transform: translateY(-2px);
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Mobile Navigation */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            z-index: 1000;
+            box-shadow: 0px -5px 20px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+        }
+        
+        .mobile-nav a {
+            color: var(--dark-color);
+            text-align: center;
+            padding: 10px;
+            text-decoration: none;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .mobile-nav a i {
+            font-size: 20px;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+        }
+        
+        .mobile-nav a.active {
+            color: var(--primary-color);
+        }
+        
+        /* Toggle button for sidebar */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            z-index: 1001;
+            cursor: pointer;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content.active {
+                margin-left: 250px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                z-index: 1002;
+            }
+            
+            .main-content.active {
+                margin-left: 0;
+                padding-top: 250px;
+            }
+            
+            .mobile-nav {
+                display: flex;
+                justify-content: space-around;
+            }
+            
+            body {
+                padding-bottom: 70px;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .path-container {
+                padding-left: 35px;
+            }
+            
+            .path-item::before {
+                left: -28px;
+                width: 20px;
+                height: 20px;
+            }
+            
+            .path-timeline {
+                left: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Menu toggle button for mobile -->
+    <button class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <h2><i class="fas fa-code"></i> CoastCode</h2>
+        </div>
+        <a href="index.html"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="playground.html"><i class="fas fa-laptop-code"></i> Coding Playground</a>
+        <a href="challenges.html"><i class="fas fa-puzzle-piece"></i> Challenges</a>
+        <a href="achievement.html"><i class="fas fa-trophy"></i> Achievements</a>
+        <a href="learning.html" class="active"><i class="fas fa-book"></i> Learning Path</a>
+        <a href="schedule.html"><i class="fas fa-calendar-alt"></i> Schedule</a>
+        <a href="help.html"><i class="fas fa-question-circle"></i> Help</a>
+        <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal"><i class="fas fa-sign-in-alt"></i> Login/Profile</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <!-- Welcome Banner -->
+        <div class="welcome-banner">
+            <h2>Your Learning Journey</h2>
+            <p>Follow your personalized learning path to become a coding master!</p>
+            <button class="btn btn-light mt-2">
+                <i class="fas fa-play-circle"></i> Continue Where You Left Off
+            </button>
+        </div>
+
+        <!-- Learning Path Section -->
+        <div class="dashboard-container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4><i class="fas fa-route"></i> Your Learning Path</h4>
+                <div class="dropdown">
+                    <button class="btn btn-outline-primary dropdown-toggle" type="button" id="pathDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-filter"></i> Web Development
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="pathDropdown">
+                        <li><a class="dropdown-item" href="#">Web Development</a></li>
+                        <li><a class="dropdown-item" href="#">Game Development</a></li>
+                        <li><a class="dropdown-item" href="#">Mobile App Development</a></li>
+                        <li><a class="dropdown-item" href="#">Robotics</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="path-container">
+                <div class="path-timeline"></div>
+                
+                <!-- HTML Fundamentals - Completed -->
+                <div class="path-item completed">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5><i class="fas fa-html5"></i> HTML Fundamentals</h5>
+                        <span class="status-badge status-completed">Completed</span>
+                    </div>
+                    <p>Learn the building blocks of web pages and create your first HTML document.</p>
+                    
+                    <div class="module-card completed">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6>Module 1: Introduction to HTML</h6>
+                            <span><i class="fas fa-check-circle text-success"></i></span>
+                        </div>
+                        <p class="mb-0 text-muted">Learn about HTML tags, elements, and document structure.</p>
+                    </div>
+                    
+                    <div class="module-card completed">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6>Module 2: HTML Elements & Attributes</h6>
+                            <span><i class="fas fa-check-circle text-success"></i></span>
+                        </div>
+                        <p class="mb-0 text-muted">Explore common HTML elements and their attributes.</p>
+                    </div>
+                    
+                    <div class="module-card completed">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6>Module 3: Creating Your First Webpage</h6>
+                            <span><i class="fas fa-check-circle text-success"></i></span>
+                        </div>
+                        <p class="mb-0 text-muted">Build a complete webpage with headers, paragraphs, lists, and images.</p>
+                    </div>
+                    
+                    <div class="text-end mt-3">
+                        <button class="btn btn-outline-primary">
+                            <i class="fas fa-redo"></i> Review Content
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- CSS Basics - Completed -->
+                <div class="path-item completed">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5><i class="fas fa-css3-alt"></i> CSS Basics</h5>
+                        <span class="status-badge status-completed">Completed</span>
+                    </div>
+                    <p>Make your webpages beautiful with colors, fonts, and layouts using CSS.</p>
+                    
+                    <div class="module-card completed">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6>Module 1: Introduction to CSS</h6>
+                            <span><i class="fas fa-check-circle text-success"></i></span>
+                        </div>
+                        <p class="mb-0 text-muted">Learn how to style HTML elements using CSS.</p>
+                    </div>
+                    
+                    <div class="module-card completed">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6>Module 2: Colors, Fonts, and Backgrounds</h6>
+                            <span><i class="fas fa-check-circle text-success"></i></span>
+                        </div>
+                        <p class="mb-0 text-muted">Master the visual aspects of your webpage.</p>
+                    </div>
+                    
+                    <div class="module-card completed">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6>Module 3: Layout and Positioning</h6>
+                            <span><i class="fas fa-check-circle text-success"></i></span>
+                        </div>
+                        <p class="mb-0 text-muted">Learn how to position elements on your webpage.</p>
+                    </div>
+                    
+                    <div class="text-end mt-3">
+                        <button class="btn btn-outline-primary">
+                            <i class="fas fa-redo"></i> Review Content
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- JavaScript Essentials - In Progress -->
+                <div class="path-item active">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5><i class="fab fa-js-square"></i> JavaScript Essentials</h5>
+                        <span class="status-badge status-in-progress">In Progress</span>
+                    </div>
+                    <p>Add interactivity to your webpages with JavaScript programming.</p>
+                    
+                    <div class="module-card completed">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6>Module 1: Introduction to JavaScript</h6>
+                            <span><i class="fas fa-check-circle text-success"></i></span>
+                        </div>
+                        <p class="mb-0 text-muted">Learn the basics of JavaScript programming language.</p>
+                    </div>
+                    
+                    <div class="module-card completed">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6>Module 2: Variables and Data Types</h6>
+                            <span><i class="fas fa-check-circle text-success"></i></span>
+                        </div>
+                        <p class="mb-0 text-muted">Understand how to store and manipulate data in JavaScript.</p>
+                    </div>
+                    
+                    <div class="module-card in-progress">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6>Module 3: Functions and Events</h6>
+                            <span><i class="fas fa-spinner text-warning"></i></span>
+                        </div>
+                        <p class="mb-0 text-muted">Create functions and respond to user events.</p>
+                        <div class="progress mt-2">
+                            <div class="progress-bar" role="progressbar" style="width: 60%;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-2">
+                            <small>60% completed</small>
+                            <button class="btn btn-sm btn-success">Continue</button>
+                        </div>
+                    </div>
+                    
+                    <div class="module-card locked">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6>Module 4: DOM Manipulation</h6>
+                            <span><i class="fas fa-lock text-secondary"></i></span>
+                        </div>
+                        <p class="mb-0 text-muted">Learn how to change HTML elements using JavaScript.</p>
+                    </div>
+                </div>
+                
+                <!-- Interactive Web Projects - Locked -->
+                <div class="path-item locked">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5><i class="fas fa-project-diagram"></i> Interactive Web Projects</h5>
+                        <span class="status-badge status-locked">Locked</span>
+                    </div>
+                    <p>Build exciting interactive web projects by combining HTML, CSS, and JavaScript.</p>
+                    
+                    <div class="module-card locked">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6>Project 1: Interactive Quiz Game</h6>
+                            <span><i class="fas fa-lock text-secondary"></i></span>
+                        </div>
+                        <p class="mb-0 text-muted">Create a fun quiz game with score tracking.</p>
+                    </div>
+                    
+                    <div class="module-card locked">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6>Project 2: Weather Dashboard</h6>
+                            <span><i class="fas fa-lock text-secondary"></i></span>
+                        </div>
+                        <p class="mb-0 text-muted">Build a weather app that shows current conditions.</p>
+                    </div>
+                    
+                    <div class="module-card locked">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6>Project 3: Personal Portfolio Website</h6>
+                            <span><i class="fas fa-lock text-secondary"></i></span>
+                        </div>
+                        <p class="mb-0 text-muted">Create your own portfolio website to showcase your projects.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Featured Courses Section -->
+        <div class="dashboard-container">
+            <h4 class="mb-4"><i class="fas fa-star"></i> Featured Courses</h4>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="course-card">
+                        <div class="course-image" style="background-color: #73a5ff;"></div>
+                        <span class="course-badge">New</span>
+                        <div class="course-content">
+                            <h5>Game Development with JavaScript</h5>
+                            <p class="text-muted">Learn to build exciting games using JavaScript and HTML5 Canvas.</p>
+                            <div class="course-stats">
+                                <span><i class="fas fa-clock"></i> 8 hours</span>
+                                <span><i class="fas fa-book"></i> 6 modules</span>
+                                <span><i class="fas fa-user"></i> Beginner</span>
+                            </div>
+                            <button class="btn btn-primary w-100 mt-3">Enroll Now</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="course-card">
+                        <div class="course-image" style="background-color: #06D6A0;"></div>
+                        <span class="course-badge">Popular</span>
+                        <div class="course-content">
+                            <h5>Creating Animations with CSS</h5>
+                            <p class="text-muted">Master CSS animations and transitions to make your websites come alive.</p>
+                            <div class="course-stats">
+                                <span><i class="fas fa-clock"></i> 6 hours</span>
+                                <span><i class="fas fa-book"></i> 5 modules</span>
+                                <span><i class="fas fa-user"></i> Intermediate</span>
+                            </div>
+                            <button class="btn btn-primary w-100 mt-3">Enroll Now</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="course-card">
+                        <div class="course-image" style="background-color: #FFD166;"></div>
+                        <div class="course-content">
+                            <h5>Mobile App Design for Kids</h5>
+                            <p class="text-muted">Design your own mobile app interfaces and learn about user experience.</p>
+                            <div class="course-stats">
+                                <span><i class="fas fa-clock"></i> 10 hours</span>
+                                <span><i class="fas fa-book"></i> 8 modules</span>
+                                <span><i class="fas fa-user"></i> Beginner</span>
+                            </div>
+                            <button class="btn btn-primary w-100 mt-3">Enroll Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <button class="btn btn-outline-primary">
+                    <i class="fas fa-th-list"></i> Browse All Courses
+                </button>
+            </div>
+        </div>
+        
+        <!-- Learning Resources -->
+        <div class="dashboard-container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4><i class="fas fa-book-open"></i> Additional Resources</h4>
+                <a href="#" class="text-decoration-none">View All</a>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="path-item">
+                        <h5><i class="fas fa-video"></i> Video Tutorials</h5>
+                        <p>Watch guided video lessons for visual learning.</p>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-0">HTML Tag Tutorial</h6>
+                                    <small class="text-muted">10 minutes</small>
+                                </div>
+                                <button class="btn btn-sm btn-primary"><i class="fas fa-play"></i> Watch</button>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-0">CSS Flexbox Layout</h6>
+                                    <small class="text-muted">12 minutes</small>
+                                </div>
+                                <button class="btn btn-sm btn-primary"><i class="fas fa-play"></i> Watch</button>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-0">JavaScript Loops</h6>
+                                    <small class="text-muted">15 minutes</small>
+                                </div>
+                                <button class="btn btn-sm btn-primary"><i class="fas fa-play"></i> Watch</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="path-item">
+                        <h5><i class="fas fa-file-alt"></i> Practice Exercises</h5>
+                        <p>Extra practice exercises to strengthen your coding skills.</p>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-0">Create a Personal Profile Page</h6>
+                                    <small class="text-muted">Beginner level</small>
+                                </div>
+                                <button class="btn btn-sm btn-primary"><i class="fas fa-code"></i> Start</button>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-0">Build a Responsive Layout</h6>
+                                    <small class="text-muted">Intermediate level</small>
+                                </div>
+                                <button class="btn btn-sm btn-primary"><i class="fas fa-code"></i> Start</button>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-0">JavaScript Calculator</h6>
+                                    <small class="text-muted">Intermediate level</small>
+                                </div>
+                                <button class="btn btn-sm btn-primary"><i class="fas fa-code"></i> Start</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav">
+        <a href="index.html">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="playground.html">
+            <i class="fas fa-laptop-code"></i>
+            <span>Playground</span>
+        </a>
+        <a href="challenges.html">
+            <i class="fas fa-puzzle-piece"></i>
+            <span>Challenges</span>
+        </a>
+        <a href="learning.html" class="active">
+            <i class="fas fa-book"></i>
+            <span>Learning</span>
+        </a>
+        <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="loginModalLabel">Login to CoastCode</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs" id="loginTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login-pane" type="button" role="tab" aria-controls="login-pane" aria-selected="true">Login</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#register-pane" type="button" role="tab" aria-controls="register-pane" aria-selected="false">Register</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="loginTabsContent">
+                        <div class="tab-pane fade show active" id="login-pane" role="tabpanel" aria-labelledby="login-tab">
+                            <form class="mt-3">
+                                <div class="mb-3">
+                                    <label for="loginEmail" class="form-label">Email address</label>
+                                    <input type="email" class="form-control" id="loginEmail" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="loginPassword" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="loginPassword" required>
+                                </div>
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="rememberMe">
+                                    <label class="form-check-label" for="rememberMe">Remember me</label>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">Login</button>
+                                <div class="text-center mt-3">
+                                    <a href="#" class="text-decoration-none">Forgot password?</a>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="register-pane" role="tabpanel" aria-labelledby="register-tab">
+                            <form class="mt-3">
+                                <div class="mb-3">
+                                    <label for="registerName" class="form-label">Full Name</label>
+                                    <input type="text" class="form-control" id="registerName" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="registerEmail" class="form-label">Email address</label>
+                                    <input type="email" class="form-control" id="registerEmail" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="registerPassword" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="registerPassword" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="registerAge" class="form-label">Age</label>
+                                    <select class="form-select" id="registerAge" required>
+                                        <option selected disabled value="">Select age group</option>
+                                        <option value="8-10">8-10 years</option>
+                                        <option value="11-13">11-13 years</option>
+                                        <option value="14-16">14-16 years</option>
+                                        <option value="17+">17+ years</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">Register</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script>
+        // Toggle sidebar on mobile
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('mainContent').classList.toggle('active');
+        });
+        
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menuToggle');
+            
+            if (!sidebar.contains(event.target) && !menuToggle.contains(event.target) && sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+                document.getElementById('mainContent').classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

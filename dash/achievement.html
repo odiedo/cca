@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoastCode - Achievements</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #FE5D37;
+            --secondary-color: #FFD166;
+            --accent-color: #06D6A0;
+            --dark-color: #073B4C;
+            --light-color: #f8f9fa;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            color: var(--dark-color);
+            font-family: 'Roboto', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar styles */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: var(--primary-color);
+            background-image: linear-gradient(135deg, var(--primary-color) 0%, #ff8e63 100%);
+            color: white;
+            position: fixed;
+            padding: 20px;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .sidebar .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .sidebar .logo h2 {
+            font-weight: bold;
+        }
+        
+        .sidebar a {
+            color: white;
+            display: block;
+            padding: 12px 15px;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar a:hover, .sidebar a.active {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+        
+        /* Main content */
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .achievements-container {
+            border-radius: 15px;
+            background-color: white;
+            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        /* Achievement badge styles */
+        .achievement-badge {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            padding: 15px;
+        }
+        
+        .achievement-badge:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .badge-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            font-size: 30px;
+            flex-shrink: 0;
+            color: white;
+        }
+        
+        .badge-beginner {
+            background-color: var(--primary-color);
+        }
+        
+        .badge-intermediate {
+            background-color: var(--accent-color);
+        }
+        
+        .badge-advanced {
+            background-color: #6c5ce7;
+        }
+        
+        .badge-expert {
+            background-color: #fd79a8;
+        }
+        
+        .badge-special {
+            background-color: var(--secondary-color);
+            color: var(--dark-color) !important;
+        }
+        
+        .badge-locked {
+            background-color: #e9ecef;
+            color: #adb5bd !important;
+        }
+        
+        .achievement-content {
+            flex-grow: 1;
+        }
+        
+        .achievement-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 18px;
+        }
+        
+        .achievement-description {
+            color: #6c757d;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .achievement-date {
+            color: #adb5bd;
+            font-size: 0.8rem;
+        }
+        
+        .progress-mini {
+            height: 8px;
+            margin-top: 10px;
+            width: 100%;
+            border-radius: 4px;
+            background-color: #f0f2f5;
+            overflow: hidden;
+        }
+        
+        .progress-mini-fill {
+            height: 100%;
+            background-color: var(--accent-color);
+        }
+        
+        /* Stats card */
+        .stats-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .stats-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .stats-title {
+            font-weight: bold;
+            color: var(--dark-color);
+            margin-bottom: 0;
+        }
+        
+        .stats-item {
+            text-align: center;
+            padding: 15px 10px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .stats-item:hover {
+            background-color: #f8f9fa;
+            transform: translateY(-5px);
+        }
+        
+        .stats-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .stats-label {
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        /* Achievement categories */
+        .category-tabs {
+            display: flex;
+            overflow-x: auto;
+            margin-bottom: 25px;
+            padding-bottom: 5px;
+        }
+        
+        .category-tab {
+            white-space: nowrap;
+            padding: 8px 20px;
+            background-color: white;
+            border-radius: 50px;
+            margin-right: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .category-tab.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .category-tab:hover:not(.active) {
+            background-color: #f8f9fa;
+            transform: translateY(-2px);
+        }
+        
+        /* Profile card */
+        .profile-card {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .profile-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 25px;
+            position: relative;
+        }
+        
+        .profile-level-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: var(--secondary-color);
+            color: var(--dark-color);
+            border-radius: 20px;
+            padding: 5px 15px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 5px solid white;
+            margin-bottom: 15px;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: var(--primary-color);
+        }
+        
+        .profile-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .profile-tagline {
+            opacity: 0.8;
+            margin-bottom: 0;
+        }
+        
+        .profile-stats {
+            display: flex;
+            padding: 15px;
+            border-bottom: 1px solid #f0f2f5;
+        }
+        
+        .profile-stat {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .profile-stat-number {
+            font-weight: bold;
+            font-size: 20px;
+            color: var(--dark-color);
+        }
+        
+        .profile-stat-label {
+            font-size: 12px;
+            color: #6c757d;
+        }
+        
+        .profile-bio {
+            padding: 20px;
+        }
+        
+        .profile-edit-btn {
+            width: 100%;
+            border-radius: 0;
+        }
+        
+        /* Leaderboard */
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            background-color: white;
+            transition: all 0.3s;
+        }
+        
+        .leaderboard-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .leaderboard-rank {
+            width: 30px;
+            height: 30px;
+            background-color: #f0f2f5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .rank-1 {
+            background-color: gold;
+            color: var(--dark-color);
+        }
+        
+        .rank-2 {
+            background-color: silver;
+            color: var(--dark-color);
+        }
+        
+        .rank-3 {
+            background-color: #cd7f32;
+            color: white;
+        }
+        
+        .leaderboard-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 15px;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: var(--primary-color);
+            flex-shrink: 0;
+        }
+        
+        .leaderboard-name {
+            font-weight: bold;
+            margin-bottom: 0;
+            flex-grow: 1;
+        }
+        
+        .leaderboard-points {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .current-user {
+            background-color: #fff3cd;
+        }
+        
+        /* Certificate styles */
+        .certificate-card {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+        }
+        
+        .certificate-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .certificate-header {
+            background-color: var(--secondary-color);
+            padding: 15px;
+            text-align: center;
+            color: var(--dark-color);
+        }
+        
+        .certificate-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .certificate-icon {
+            font-size: 30px;
+            margin-bottom: 5px;
+        }
+        
+        .certificate-content {
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .certificate-date {
+            color: #6c757d;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        /* Achievement level */
+        .level-progress {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .level-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+        
+        .level-bar {
+            height: 15px;
+            background-color: #f0f2f5;
+            border-radius: 7px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .level-fill {
+            height: 100%;
+            background-color: var(--accent-color);
+            width: 65%;
+        }
+        
+        .level-markers {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .level-marker {
+            position: relative;
+            text-align: center;
+        }
+        
+        .level-dot {
+            width: 20px;
+            height: 20px;
+            background-color: #e9ecef;
+            border-radius: 50%;
+            margin: 0 auto 5px;
+            border: 3px solid white;
+            z-index: 1;
+        }
+        
+        .level-dot.active {
+            background-color: var(--accent-color);
+        }
+        
+        .level-label {
+            font-size: 12px;
+            color: #6c757d;
+        }
+        
+        .level-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .current-level {
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+        
+        .next-level {
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        /* Streak calendar */
+        .streak-calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .calendar-day {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 5px;
+            background-color: #f0f2f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #6c757d;
+        }
+        
+        .calendar-day.active {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .calendar-day.current {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        /* Mobile Navigation */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            z-index: 1000;
+            box-shadow: 0px -5px 20px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+        }
+        
+        .mobile-nav a {
+            color: var(--dark-color);
+            text-align: center;
+            padding: 10px;
+            text-decoration: none;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .mobile-nav a i {
+            font-size: 20px;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+        }
+        
+        .mobile-nav a.active {
+            color: var(--primary-color);
+        }
+        
+        /* Toggle button for sidebar */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            z-index: 1001;
+            cursor: pointer;
+        }
+        
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: white;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .empty-state-icon {
+            font-size: 60px;
+            color: #e9ecef;
+            margin-bottom: 20px;
+        }
+        
+        .empty-state-text {
+            color: #6c757d;
+            margin-bottom: 20px;
+        }
+        
+        /* Buttons */
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 8px;
+            padding: 8px 15px;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            background-color: #e04e2e;
+            transform: translateY(-2px);
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-outline-primary {
+            color: var(--primary-color);
+            background-color: transparent;
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 8px 15px;
+            transition: all 0.3s;
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Share button */
+        .share-achievement {
+            margin-left: 10px;
+            background-color: #f0f2f5;
+            color: #6c757d;
+            border-radius: 8px;
+            padding: 8px 12px;
+            border: none;
+            transition: all 0.3s;
+        }
+        
+        .share-achievement:hover {
+            background-color: #e9ecef;
+            color: var(--dark-color);
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content.active {
+                margin-left: 250px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                z-index: 1002;
+            }
+            
+            .main-content.active {
+                margin-left: 0;
+                padding-top: 250px;
+            }
+            
+            .mobile-nav {
+                display: flex;
+                justify-content: space-around;
+            }
+            
+            body {
+                padding-bottom: 70px;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Menu toggle button for mobile -->
+    <button class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <h2><i class="fas fa-code"></i> CoastCode</h2>
+        </div>
+        <a href="index.html"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="playground.html"><i class="fas fa-laptop-code"></i> Coding Playground</a>
+        <a href="challenges.html"><i class="fas fa-puzzle-piece"></i> Challenges</a>
+        <a href="achievement.html" class="active"><i class="fas fa-trophy"></i> Achievements</a>
+        <a href="learning.html"><i class="fas fa-book"></i> Learning Path</a>
+        <a href="schedule.html"><i class="fas fa-calendar-alt"></i> Schedule</a>
+        <a href="help.html"><i class="fas fa-question-circle"></i> Help</a>
+        <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal"><i class="fas fa-sign-in-alt"></i> Login/Profile</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="mb-4"><i class="fas fa-trophy"></i> Your Achievements</h2>
+            </div>
+            
+            <div class="col-lg-4">
+                <!-- Profile Card -->
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="profile-level-badge">Level 8</div>
+                        <div class="profile-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h3 class="profile-name">Alex Johnson</h3>
+                        <p class="profile-tagline">Budding Coder | Game Developer</p>
+                    </div>
+                    <div class="profile-stats">
+                        <div class="profile-stat">
+                            <div class="profile-stat-number">36</div>
+                            <div class="profile-stat-label">Challenges</div>
+                        </div>
+                        <div class="profile-stat">
+                            <div class="profile-stat-number">18</div>
+                            <div class="profile-stat-label">Badges</div>
+                        </div>
+                        <div class="profile-stat">
+                            <div class="profile-stat-number">3</div>
+                            <div class="profile-stat-label">Certificates</div>
+                        </div>
+                    </div>
+                    <div class="profile-bio">
+                        <p>I love coding and creating games! My favorite languages are JavaScript and Python. I've been coding for 1 year and hope to make my own video game someday.</p>
+                    </div>
+                    <button class="btn btn-primary profile-edit-btn" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                        <i class="fas fa-edit"></i> Edit Profile
+                    </button>
+                </div>
+                
+                <!-- Level Progress -->
+                <div class="level-progress">
+                    <h4 class="level-title"><i class="fas fa-chart-line"></i> Coding Journey</h4>
+                    
+                    <div class="level-bar">
+                        <div class="level-fill"></div>
+                    </div>
+                    
+                    <div class="level-markers">
+                        <div class="level-marker">
+                            <div class="level-dot active"></div>
+                            <div class="level-label">Beginner</div>
+                        </div>
+                        <div class="level-marker">
+                            <div class="level-dot active"></div>
+                            <div class="level-label">Cadet</div>
+                        </div>
+                        <div class="level-marker">
+                            <div class="level-dot active"></div>
+                            <div class="level-label">Explorer</div>
+                        </div>
+                        <div class="level-marker">
+                            <div class="level-dot"></div>
+                            <div class="level-label">Champion</div>
+                        </div>
+                        <div class="level-marker">
+                            <div class="level-dot"></div>
+                            <div class="level-label">Master</div>
+                        </div>
+                    </div>
+                    
+                    <div class="level-details">
+                        <div class="current-level">Coder Explorer</div>
+                        <div class="next-level">450 XP to Champion Level</div>
+                    </div>
+                </div>
+                
+                <!-- Streak Calendar -->
+                <div class="stats-card">
+                    <div class="stats-header">
+                        <h4 class="stats-title"><i class="fas fa-fire"></i> Coding Streak</h4>
+                        <span class="badge bg-warning">12 Days!</span>
+                    </div>
+                    
+                    <p class="mb-2">You've been coding for <strong>12 days</strong> in a row! Keep it up!</p>
+                    
+                    <div class="streak-calendar">
+                        <div class="calendar-day active">1</div>
+                        <div class="calendar-day active">2</div>
+                        <div class="calendar-day active">3</div>
+                        <div class="calendar-day active">4</div>
+                        <div class="calendar-day active">5</div>
+                        <div class="calendar-day active">6</div>
+                        <div class="calendar-day active">7</div>
+                        <div class="calendar-day active">8</div>
+                        <div class="calendar-day active">9</div>
+                        <div class="calendar-day active">10</div>
+                        <div class="calendar-day active">11</div>
+                        <div class="calendar-day current">12</div>
+                        <div class="calendar-day">13</div>
+                        <div class="calendar-day">14</div>
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <button class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-calendar-alt"></i> View Full Calendar
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Leaderboard -->
+                <div class="stats-card">
+                    <div class="stats-header">
+                        <h4 class="stats-title"><i class="fas fa-crown"></i> Leaderboard</h4>
+                        <a href="#" class="text-decoration-none">View All</a>
+                    </div>
+                    
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-rank rank-1">1</div>
+                        <div class="leaderboard-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="leaderboard-name">SamCoder42</div>
+                        <div class="leaderboard-points">2,450 XP</div>
+                    </div>
+                    
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-rank rank-2">2</div>
+                        <div class="leaderboard-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="leaderboard-name">CodeNinja</div>
+                        <div class="leaderboard-points">2,380 XP</div>
+                    </div>
+                    
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-rank rank-3">3</div>
+                        <div class="leaderboard-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="leaderboard-name">GameMaster</div>
+                        <div class="leaderboard-points">2,120 XP</div>
+                    </div>
+                    
+                    <div class="leaderboard-item current-user">
+                        <div class="leaderboard-rank">7</div>
+                        <div class="leaderboard-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="leaderboard-name">Alex Johnson</div>
+                        <div class="leaderboard-points">1,850 XP</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-8">
+                <!-- Stats Overview -->
+                <div class="stats-card mb-4">
+                    <div class="stats-header">
+                        <h4 class="stats-title"><i class="fas fa-chart-bar"></i> Coding Statistics</h4>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="timeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                This Month
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="timeDropdown">
+                                <li><a class="dropdown-item" href="#">This Week</a></li>
+                                <li><a class="dropdown-item" href="#">This Month</a></li>
+                                <li><a class="dropdown-item" href="#">All Time</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-3 col-6">
+                            <div class="stats-item">
+                                <div class="stats-number">36</div>
+                                <div class="stats-label">Challenges Completed</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="stats-item">
+                                <div class="stats-number">28</div>
+                                <div class="stats-label">Coding Hours</div>
+                            </div>
+                        </div> <div class="col-md-3 col-6">
+                            <div class="stats-item">
+                                <div class="stats-number">18</div>
+                                <div class="stats-label">Badges Earned</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="stats-item">
+                                <div class="stats-number">1850</div>
+                                <div class="stats-label">XP Points</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Achievement Categories -->
+                <div class="category-tabs">
+                    <div class="category-tab active">All Achievements</div>
+                    <div class="category-tab">Beginner</div>
+                    <div class="category-tab">Intermediate</div>
+                    <div class="category-tab">Advanced</div>
+                    <div class="category-tab">Expert</div>
+                    <div class="category-tab">Special</div>
+                </div>
+                
+                <!-- Achievements Container -->
+                <div class="achievements-container">
+                    <!-- Beginner Achievements -->
+                    <div class="achievement-badge">
+                        <div class="badge-icon badge-beginner">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div class="achievement-content">
+                            <div class="achievement-title">Hello World Master</div>
+                            <div class="achievement-description">Completed your first 5 JavaScript "Hello World" challenges!</div>
+                            <div class="achievement-date">Earned: May 15, 2023</div>
+                        </div>
+                        <button class="share-achievement">
+                            <i class="fas fa-share-alt"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="achievement-badge">
+                        <div class="badge-icon badge-beginner">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <div class="achievement-content">
+                            <div class="achievement-title">Math Wizard</div>
+                            <div class="achievement-description">Successfully completed all basic math function challenges</div>
+                            <div class="achievement-date">Earned: May 20, 2023</div>
+                        </div>
+                        <button class="share-achievement">
+                            <i class="fas fa-share-alt"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Intermediate Achievements -->
+                    <div class="achievement-badge">
+                        <div class="badge-icon badge-intermediate">
+                            <i class="fas fa-loop"></i>
+                        </div>
+                        <div class="achievement-content">
+                            <div class="achievement-title">Loop Explorer</div>
+                            <div class="achievement-description">Mastered both for and while loops in your coding projects</div>
+                            <div class="achievement-date">Earned: June 3, 2023</div>
+                        </div>
+                        <button class="share-achievement">
+                            <i class="fas fa-share-alt"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="achievement-badge">
+                        <div class="badge-icon badge-intermediate">
+                            <i class="fas fa-puzzle-piece"></i>
+                        </div>
+                        <div class="achievement-content">
+                            <div class="achievement-title">Function Master</div>
+                            <div class="achievement-description">Successfully created and used 10 custom functions</div>
+                            <div class="achievement-date">Earned: June 10, 2023</div>
+                        </div>
+                        <button class="share-achievement">
+                            <i class="fas fa-share-alt"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Advanced Achievements -->
+                    <div class="achievement-badge">
+                        <div class="badge-icon badge-advanced">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <div class="achievement-content">
+                            <div class="achievement-title">Data Master</div>
+                            <div class="achievement-description">Successfully worked with arrays and objects to store and manipulate data</div>
+                            <div class="achievement-date">Earned: July 5, 2023</div>
+                        </div>
+                        <button class="share-achievement">
+                            <i class="fas fa-share-alt"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Locked Achievement -->
+                    <div class="achievement-badge">
+                        <div class="badge-icon badge-locked">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div class="achievement-content">
+                            <div class="achievement-title">Animation Expert</div>
+                            <div class="achievement-description">Create your first animated game using JavaScript</div>
+                            <div class="progress-mini">
+                                <div class="progress-mini-fill" style="width: 60%"></div>
+                            </div>
+                            <small>3/5 challenges completed</small>
+                        </div>
+                        <button class="btn btn-sm btn-primary">Start</button>
+                    </div>
+                    
+                    <!-- Special Achievement -->
+                    <div class="achievement-badge">
+                        <div class="badge-icon badge-special">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="achievement-content">
+                            <div class="achievement-title">10-Day Streak</div>
+                            <div class="achievement-description">Coded for 10 consecutive days! Keep up the great work!</div>
+                            <div class="achievement-date">Earned: July 15, 2023</div>
+                        </div>
+                        <button class="share-achievement">
+                            <i class="fas fa-share-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Certificates Section -->
+                <h4 class="mb-4 mt-5"><i class="fas fa-certificate"></i> Your Certificates</h4>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="certificate-card">
+                            <div class="certificate-header">
+                                <div class="certificate-icon">
+                                    <i class="fas fa-certificate"></i>
+                                </div>
+                                <h5 class="certificate-title">JavaScript Fundamentals</h5>
+                            </div>
+                            <div class="certificate-content">
+                                <div class="certificate-date">Issued: June 20, 2023</div>
+                                <button class="btn btn-sm btn-primary">
+                                    <i class="fas fa-download"></i> Download
+                                </button>
+                                <button class="btn btn-sm btn-outline-primary ms-2">
+                                    <i class="fas fa-share-alt"></i> Share
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="certificate-card">
+                            <div class="certificate-header">
+                                <div class="certificate-icon">
+                                    <i class="fas fa-certificate"></i>
+                                </div>
+                                <h5 class="certificate-title">Web Development Basics</h5>
+                            </div>
+                            <div class="certificate-content">
+                                <div class="certificate-date">Issued: July 5, 2023</div>
+                                <button class="btn btn-sm btn-primary">
+                                    <i class="fas fa-download"></i> Download
+                                </button>
+                                <button class="btn btn-sm btn-outline-primary ms-2">
+                                    <i class="fas fa-share-alt"></i> Share
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="certificate-card">
+                            <div class="certificate-header">
+                                <div class="certificate-icon">
+                                    <i class="fas fa-certificate"></i>
+                                </div>
+                                <h5 class="certificate-title">Game Design Intro</h5>
+                            </div>
+                            <div class="certificate-content">
+                                <div class="certificate-date">Issued: July 18, 2023</div>
+                                <button class="btn btn-sm btn-primary">
+                                    <i class="fas fa-download"></i> Download
+                                </button>
+                                <button class="btn btn-sm btn-outline-primary ms-2">
+                                    <i class="fas fa-share-alt"></i> Share
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Upcoming Achievements -->
+                <h4 class="mb-4 mt-5"><i class="fas fa-flag-checkered"></i> Next Goals</h4>
+                
+                <div class="achievements-container">
+                    <div class="achievement-badge">
+                        <div class="badge-icon badge-locked">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="achievement-content">
+                            <div class="achievement-title">AI Explorer</div>
+                            <div class="achievement-description">Complete the introductory AI programming module</div>
+                            <div class="progress-mini">
+                                <div class="progress-mini-fill" style="width: 30%"></div>
+                            </div>
+                            <small>3/10 lessons completed</small>
+                        </div>
+                        <button class="btn btn-sm btn-primary">Continue</button>
+                    </div>
+                    
+                    <div class="achievement-badge">
+                        <div class="badge-icon badge-locked">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                        <div class="achievement-content">
+                            <div class="achievement-title">Game Developer</div>
+                            <div class="achievement-description">Create your first complete browser game</div>
+                            <div class="progress-mini">
+                                <div class="progress-mini-fill" style="width: 45%"></div>
+                            </div>
+                            <small>4/8 components finished</small>
+                        </div>
+                        <button class="btn btn-sm btn-primary">Continue</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav">
+        <a href="index.html">
+            <i class="fas fa-home"></i>
+            Home
+        </a>
+        <a href="index.html">
+            <i class="fas fa-laptop-code"></i>
+            Code
+        </a>
+        <a href="challenges.html">
+            <i class="fas fa-puzzle-piece"></i>
+            Challenges
+        </a>
+        <a href="achievements.html" class="active">
+            <i class="fas fa-trophy"></i>
+            Achieve
+        </a>
+        <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal">
+            <i class="fas fa-user"></i>
+            Profile
+        </a>
+    </div>
+    
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="loginModalLabel">Login to CoastCode</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password">
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="rememberMe">
+                            <label class="form-check-label" for="rememberMe">Remember me</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <a href="#" class="text-decoration-none">Forgot password?</a>
+                        <p class="mt-2">Don't have an account? <a href="#" class="text-decoration-none">Sign up</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Edit Profile Modal -->
+    <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="editProfileModalLabel">Edit Your Profile</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3 text-center">
+                            <div class="profile-avatar mx-auto">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-outline-primary mt-2">
+                                <i class="fas fa-camera"></i> Change Avatar
+                            </button>
+                        </div>
+                        <div class="mb-3">
+                            <label for="displayName" class="form-label">Display Name</label>
+                            <input type="text" class="form-control" id="displayName" value="Alex Johnson">
+                        </div>
+                        <div class="mb-3">
+                            <label for="tagline" class="form-label">Tagline</label>
+                            <input type="text" class="form-control" id="tagline" value="Budding Coder | Game Developer">
+                        </div>
+                        <div class="mb-3">
+                            <label for="bio" class="form-label">Bio</label>
+                            <textarea class="form-control" id="bio" rows="3">I love coding and creating games! My favorite languages are JavaScript and Python. I've been coding for 1 year and hope to make my own video game someday.</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap and JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle sidebar on mobile
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('mainContent').classList.toggle('active');
+        });
+        
+        // Category tabs functionality
+        const categoryTabs = document.querySelectorAll('.category-tab');
+        categoryTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                categoryTabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Here you would add code to filter achievements based on category
+                // For demonstration, we're just changing the active state
+            });
+        });
+        
+        // Share achievement functionality
+        const shareButtons = document.querySelectorAll('.share-achievement');
+        shareButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const achievementTitle = this.closest('.achievement-badge').querySelector('.achievement-title').textContent;
+                alert(`Sharing "${achievementTitle}" achievement with friends!`);
+                // In a real app, this would open a share dialog
+            });
+        });
+    </script>
+</body>
+</html>
